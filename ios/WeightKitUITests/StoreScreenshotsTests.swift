@@ -64,6 +64,23 @@ final class StoreScreenshotsTests: UITestBase {
         start(l, reset: false, theme: theme)
     }
 
+    /// The list name is a text field: finish with Return (a tap on the last keyboard key would type a letter).
+    private func setListName(_ text: String) {
+        let f = field("list_name")
+        XCTAssertTrue(f.waitForExistence(timeout: 5))
+        f.tap()
+        var n = 0
+        while n < 4, let v = f.value as? String, !v.isEmpty, v != f.placeholderValue {
+            f.doubleTap()
+            f.typeText(XCUIKeyboardKey.delete.rawValue)
+            n += 1
+        }
+        f.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 30))
+        f.typeText(text + "\n")
+        _ = app.keyboards.firstMatch.waitForNonExistence(timeout: 2)
+        XCTAssertEqual(f.value as? String, text, "list name")
+    }
+
     private func addItem() {
         tap("add_to_list")
         sleep(4) // the toast disappears
@@ -115,7 +132,7 @@ final class StoreScreenshotsTests: UITestBase {
 
         // 6 – cut list with waste and markup
         tab(1); tap("list_row")
-        type("list_name", l.listName); type("field_waste", "5"); type("field_markup", "15")
+        setListName(l.listName); type("field_waste", "5"); type("field_markup", "15")
         clean(l); tab(1); tap("list_row")
         store("06_list")
 
