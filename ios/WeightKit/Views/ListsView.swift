@@ -75,6 +75,8 @@ struct ListDetailView: View {
                 Section {
                     TextField(L("list_name"), text: $lists.lists[i].name)
                         .font(.headline)
+                        // job / customer names: no autocorrect and no inline prediction that "Done" would accept
+                        .autocorrectionDisabled()
                         .accessibilityIdentifier("list_name")
                 }
                 Section(L("items")) {
