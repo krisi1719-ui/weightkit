@@ -1,0 +1,29 @@
+.DS_Store
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/.kotlin/
+*.apk
+*.aab
+*.jks
+*.keystore
+# iOS
+ios/build/
+xcuserdata/
+*.xcuserstate
+DerivedData/
+# data build
+shared/out/play_icon_512.png
+ios/build-release/
+ios/build-signed/
+build-logs/
+test-artifacts/
+.import*.tgz
+# signing keys never go into git
+*.p8
+*.p12
+*.pem
+keystore/

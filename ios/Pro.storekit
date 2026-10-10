@@ -1,0 +1,44 @@
+{
+  "identifier": "7C1E2A40",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "6.99",
+      "familyShareable": true,
+      "internalID": "6740000001",
+      "localizations": [
+        {
+          "description": "One-time purchase. Lists, export, reverse calculation, all section tables.",
+          "displayName": "WeightKit Pro",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "com.weightkit.app.pro",
+      "referenceName": "WeightKit Pro",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "0.00",
+      "familyShareable": false,
+      "internalID": "6740000002",
+      "localizations": [
+        {
+          "description": "Try all Pro features free for 14 days. No payment.",
+          "displayName": "14-day Trial",
+          "locale": "en_US"
+        }
+      ],
+      "productID": "com.weightkit.app.trial14",
+      "referenceName": "14-day Trial",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {
+    "_failTransactionsEnabled": false
+  },
+  "subscriptionGroups": [],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

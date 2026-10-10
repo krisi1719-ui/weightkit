@@ -1,0 +1,182 @@
+[
+ {
+  "id": "steel",
+  "group": "steel",
+  "name": "Carbon steel (S235/S355, A36)",
+  "density": 7850
+ },
+ {
+  "id": "tool_steel",
+  "group": "steel",
+  "name": "Tool steel",
+  "density": 7800
+ },
+ {
+  "id": "cast_iron",
+  "group": "steel",
+  "name": "Cast iron (grey)",
+  "density": 7200
+ },
+ {
+  "id": "ss201",
+  "group": "stainless",
+  "name": "Stainless 201",
+  "density": 7800
+ },
+ {
+  "id": "ss304",
+  "group": "stainless",
+  "name": "Stainless 304 / 1.4301",
+  "density": 7930
+ },
+ {
+  "id": "ss316",
+  "group": "stainless",
+  "name": "Stainless 316 / 1.4401",
+  "density": 7980
+ },
+ {
+  "id": "ss321",
+  "group": "stainless",
+  "name": "Stainless 321 / 1.4541",
+  "density": 7900
+ },
+ {
+  "id": "ss310",
+  "group": "stainless",
+  "name": "Stainless 310 / 1.4845",
+  "density": 7980
+ },
+ {
+  "id": "ss430",
+  "group": "stainless",
+  "name": "Stainless 430 / 1.4016",
+  "density": 7700
+ },
+ {
+  "id": "al1050",
+  "group": "aluminium",
+  "name": "Aluminium 1050",
+  "density": 2710
+ },
+ {
+  "id": "al5052",
+  "group": "aluminium",
+  "name": "Aluminium 5052",
+  "density": 2680
+ },
+ {
+  "id": "al6061",
+  "group": "aluminium",
+  "name": "Aluminium 6061",
+  "density": 2700
+ },
+ {
+  "id": "al6082",
+  "group": "aluminium",
+  "name": "Aluminium 6082",
+  "density": 2700
+ },
+ {
+  "id": "al7075",
+  "group": "aluminium",
+  "name": "Aluminium 7075",
+  "density": 2810
+ },
+ {
+  "id": "copper",
+  "group": "copper",
+  "name": "Copper (Cu-ETP)",
+  "density": 8940
+ },
+ {
+  "id": "brass",
+  "group": "copper",
+  "name": "Brass (CuZn37)",
+  "density": 8440
+ },
+ {
+  "id": "bronze",
+  "group": "copper",
+  "name": "Bronze (CuSn8)",
+  "density": 8800
+ },
+ {
+  "id": "ti_gr2",
+  "group": "other",
+  "name": "Titanium Grade 2",
+  "density": 4510
+ },
+ {
+  "id": "ti_gr5",
+  "group": "other",
+  "name": "Titanium Grade 5 (Ti-6Al-4V)",
+  "density": 4430
+ },
+ {
+  "id": "nickel",
+  "group": "other",
+  "name": "Nickel 200",
+  "density": 8890
+ },
+ {
+  "id": "inconel625",
+  "group": "other",
+  "name": "Inconel 625",
+  "density": 8440
+ },
+ {
+  "id": "zinc",
+  "group": "other",
+  "name": "Zinc",
+  "density": 7140
+ },
+ {
+  "id": "lead",
+  "group": "other",
+  "name": "Lead",
+  "density": 11340
+ },
+ {
+  "id": "magnesium",
+  "group": "other",
+  "name": "Magnesium",
+  "density": 1740
+ },
+ {
+  "id": "pa6",
+  "group": "plastic",
+  "name": "Nylon (PA6)",
+  "density": 1140
+ },
+ {
+  "id": "pvc",
+  "group": "plastic",
+  "name": "PVC",
+  "density": 1400
+ },
+ {
+  "id": "hdpe",
+  "group": "plastic",
+  "name": "Polyethylene (HDPE)",
+  "density": 950
+ },
+ {
+  "id": "pom",
+  "group": "plastic",
+  "name": "Acetal (POM)",
+  "density": 1410
+ },
+ {
+  "id": "ptfe",
+  "group": "plastic",
+  "name": "PTFE",
+  "density": 2200
+ },
+ {
+  "id": "pmma",
+  "group": "plastic",
+  "name": "Acrylic (PMMA)",
+  "density": 1190
+ }
+]

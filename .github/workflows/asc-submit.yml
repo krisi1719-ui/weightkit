@@ -1,0 +1,34 @@
+# Fills App Review details and (when "submit" is ticked) submits the prepared iOS version for App Review.
+name: App Store submit
+
+on:
+  workflow_dispatch:
+    inputs:
+      submit:
+        description: Submit the version for App Review (otherwise only update review details and report)
+        type: boolean
+        default: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    env:
+      APP_STORE_CONNECT_ISSUER_ID: c03b092c-a697-4603-9350-7f39fccc9c75
+      APP_STORE_CONNECT_KEY_IDENTIFIER: H8TC4F4CTP
+      APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      ASC_APP_ID: '6821445966'
+      SUBMIT: ${{ inputs.submit }}
+      REVIEW_FIRST_NAME: Kristian
+      REVIEW_LAST_NAME: Hristov
+      REVIEW_PHONE: '+359895729223'
+      REVIEW_EMAIL: ggshoplimitedco@gmail.com
+      REVIEW_NOTES: |
+        WeightKit is a metal weight calculator. It works fully offline and needs no account or sign-in. To test: pick a shape (e.g. Sheet / plate or Standard profiles) on the Calculator tab, enter dimensions and see the weight; tap "Add to list", then open the Lists tab to see the cut list with totals and export a PDF or CSV.
+
+        In-app purchases: "WeightKit Pro" (com.weightkit.app.pro) is a one-time non-consumable that unlocks saved lists, PDF/CSV export, reverse calculation, all section tables and custom materials, and removes ads. "14-day Trial" (com.weightkit.app.trial14) is a free non-consumable that starts a 14-day trial of the Pro features (guideline 3.1.1); the duration, what locks afterwards and the Pro price are shown before the trial starts. Both are in Settings > WeightKit Pro (also offered once on first launch), with Restore purchase on the same screen.
+
+        Ads are served by Google AdMob in the free version only (no tracking, no ATT prompt, Google UMP consent where required).
+    steps:
+      - uses: actions/checkout@v5
+      - run: pip install pyjwt cryptography requests
+      - run: python ci/asc_submit.py

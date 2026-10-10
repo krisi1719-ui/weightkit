@@ -1,0 +1,122 @@
+# Builds the iPhone app on a GitHub-hosted Mac (macOS 26 / Xcode 26) and uploads it to App Store Connect.
+# Start it from Actions > "iOS release" > Run workflow, or by pushing a tag like ios-v1.0-1.
+#
+# Repository secrets needed (Settings > Secrets and variables > Actions):
+#   APP_STORE_CONNECT_PRIVATE_KEY  - full text of the App Store Connect API key (.p8), incl. BEGIN/END lines
+#   CERTIFICATE_PRIVATE_KEY        - RSA private key (PEM) used for the Apple Distribution certificate
+name: iOS release
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['ios-v*']
+
+concurrency:
+  group: ios-release
+  cancel-in-progress: false
+
+jobs:
+  ios:
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      APP_STORE_CONNECT_ISSUER_ID: c03b092c-a697-4603-9350-7f39fccc9c75
+      APP_STORE_CONNECT_KEY_IDENTIFIER: H8TC4F4CTP
+      APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      CERTIFICATE_PRIVATE_KEY: ${{ secrets.CERTIFICATE_PRIVATE_KEY }}
+      BUNDLE_ID: com.ggshop.weightkit
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Tools
+        run: |
+          xcodebuild -version
+          pip3 install --break-system-packages codemagic-cli-tools || pip3 install codemagic-cli-tools
+
+      - name: Code signing
+        run: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create --delete-stale-profiles
+          KC="$RUNNER_TEMP/signing.keychain-db"; KCPW=ci
+          security create-keychain -p "$KCPW" "$KC"
+          security set-keychain-settings -lut 21600 "$KC"
+          security unlock-keychain -p "$KCPW" "$KC"
+          security list-keychains -d user -s "$KC" $(security list-keychains -d user | tr -d '"')
+          OSSL=$(brew --prefix openssl@3 2>/dev/null)/bin/openssl; [ -x "$OSSL" ] || OSSL=openssl
+          app-store-connect certificates list --type DISTRIBUTION --certificate-key "$CERTIFICATE_PRIVATE_KEY" --json > "$RUNNER_TEMP/certs.json"
+          python3 - "$RUNNER_TEMP" <<'PY'
+          import json, sys, base64, os
+          d = sys.argv[1]
+          certs = json.load(open(os.path.join(d, 'certs.json')))
+          for i, c in enumerate(certs):
+              print('Candidate', c['id'], c['attributes'].get('expirationDate'))
+              open(os.path.join(d, f'cand{i}.cer'), 'wb').write(base64.b64decode(c['attributes']['certificateContent']))
+          PY
+          printf '%s\n' "$CERTIFICATE_PRIVATE_KEY" > "$RUNNER_TEMP/dist.key"
+          KEYPUB=$("$OSSL" pkey -in "$RUNNER_TEMP/dist.key" -pubout | shasum)
+          for CER in "$RUNNER_TEMP"/cand*.cer; do
+            "$OSSL" x509 -inform DER -in "$CER" -out "$RUNNER_TEMP/dist.pem"
+            if [ "$("$OSSL" x509 -in "$RUNNER_TEMP/dist.pem" -noout -pubkey | shasum)" = "$KEYPUB" ]; then echo "Matched $CER"; break; fi
+            rm -f "$RUNNER_TEMP/dist.pem"
+          done
+          [ -f "$RUNNER_TEMP/dist.pem" ] || { echo "No certificate matches CERTIFICATE_PRIVATE_KEY"; exit 1; }
+          "$OSSL" pkcs12 -export -legacy -inkey "$RUNNER_TEMP/dist.key" -in "$RUNNER_TEMP/dist.pem" -passout pass:ci -out "$RUNNER_TEMP/dist.p12" \
+            || "$OSSL" pkcs12 -export -inkey "$RUNNER_TEMP/dist.key" -in "$RUNNER_TEMP/dist.pem" -passout pass:ci -out "$RUNNER_TEMP/dist.p12"
+          rm -f "$RUNNER_TEMP/dist.key"
+          security import "$RUNNER_TEMP/dist.p12" -k "$KC" -P ci -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KCPW" "$KC" >/dev/null
+          security find-identity -v -p codesigning "$KC"
+          PROFILE=$(ls ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles/*.mobileprovision | head -1)
+          security cms -D -i "$PROFILE" > "$RUNNER_TEMP/profile.plist"
+          UUID=$(/usr/libexec/PlistBuddy -c 'Print UUID' "$RUNNER_TEMP/profile.plist")
+          NAME=$(/usr/libexec/PlistBuddy -c 'Print Name' "$RUNNER_TEMP/profile.plist")
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp "$PROFILE" ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          echo "PROFILE_UUID=$UUID" >> $GITHUB_ENV
+          echo "PROFILE_NAME=$NAME" >> $GITHUB_ENV
+          echo "Profile: $NAME ($UUID)"
+
+      - name: Build number
+        run: |
+          N=$(( ${{ github.run_number }} + 100 ))
+          echo "BUILD_NUMBER=$N" >> $GITHUB_ENV
+          echo "Build $N, version $(grep -m1 'MARKETING_VERSION' ios/WeightKit.xcodeproj/project.pbxproj)"
+
+      - name: Build IPA
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/WeightKit.xcodeproj -scheme WeightKit -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/WeightKit.xcarchive" \
+            CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=69Y6GBM45Y CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" \
+            archive | tee "$RUNNER_TEMP/archive.log" | grep -E '^(\*\*|error:|.*: error:)' || { tail -80 "$RUNNER_TEMP/archive.log"; exit 1; }
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>teamID</key><string>69Y6GBM45Y</string>
+            <key>signingStyle</key><string>manual</string>
+            <key>signingCertificate</key><string>Apple Distribution</string>
+            <key>provisioningProfiles</key><dict><key>com.ggshop.weightkit</key><string>$PROFILE_UUID</string></dict>
+            <key>uploadSymbols</key><true/>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/WeightKit.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath build/ios/ipa
+          ls -la build/ios/ipa
+
+      - name: Upload to App Store Connect
+        run: app-store-connect publish --path "$(ls build/ios/ipa/*.ipa | head -1)"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-build
+          path: |
+            build/ios/ipa/*.ipa
+            ${{ runner.temp }}/archive.log
+          if-no-files-found: ignore

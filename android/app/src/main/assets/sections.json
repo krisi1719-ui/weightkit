@@ -1,0 +1,1303 @@
+[
+ {
+  "id": "ipe",
+  "name": "IPE",
+  "shape": "ibeam",
+  "source": "EN 10365 / DIN 1025-5",
+  "region": "EU",
+  "pro": false,
+  "verified": false,
+  "items": [
+   {
+    "name": "IPE 80",
+    "h": 80,
+    "b": 46,
+    "tw": 3.8,
+    "tf": 5.2,
+    "r": 5,
+    "area_cm2": 7.64,
+    "steel_kg_m": 6.0
+   },
+   {
+    "name": "IPE 100",
+    "h": 100,
+    "b": 55,
+    "tw": 4.1,
+    "tf": 5.7,
+    "r": 7,
+    "area_cm2": 10.3,
+    "steel_kg_m": 8.1
+   },
+   {
+    "name": "IPE 120",
+    "h": 120,
+    "b": 64,
+    "tw": 4.4,
+    "tf": 6.3,
+    "r": 7,
+    "area_cm2": 13.2,
+    "steel_kg_m": 10.4
+   },
+   {
+    "name": "IPE 140",
+    "h": 140,
+    "b": 73,
+    "tw": 4.7,
+    "tf": 6.9,
+    "r": 7,
+    "area_cm2": 16.4,
+    "steel_kg_m": 12.9
+   },
+   {
+    "name": "IPE 160",
+    "h": 160,
+    "b": 82,
+    "tw": 5.0,
+    "tf": 7.4,
+    "r": 9,
+    "area_cm2": 20.1,
+    "steel_kg_m": 15.8
+   },
+   {
+    "name": "IPE 180",
+    "h": 180,
+    "b": 91,
+    "tw": 5.3,
+    "tf": 8.0,
+    "r": 9,
+    "area_cm2": 23.9,
+    "steel_kg_m": 18.8
+   },
+   {
+    "name": "IPE 200",
+    "h": 200,
+    "b": 100,
+    "tw": 5.6,
+    "tf": 8.5,
+    "r": 12,
+    "area_cm2": 28.5,
+    "steel_kg_m": 22.4
+   },
+   {
+    "name": "IPE 220",
+    "h": 220,
+    "b": 110,
+    "tw": 5.9,
+    "tf": 9.2,
+    "r": 12,
+    "area_cm2": 33.4,
+    "steel_kg_m": 26.2
+   },
+   {
+    "name": "IPE 240",
+    "h": 240,
+    "b": 120,
+    "tw": 6.2,
+    "tf": 9.8,
+    "r": 15,
+    "area_cm2": 39.1,
+    "steel_kg_m": 30.7
+   },
+   {
+    "name": "IPE 270",
+    "h": 270,
+    "b": 135,
+    "tw": 6.6,
+    "tf": 10.2,
+    "r": 15,
+    "area_cm2": 45.9,
+    "steel_kg_m": 36.1
+   },
+   {
+    "name": "IPE 300",
+    "h": 300,
+    "b": 150,
+    "tw": 7.1,
+    "tf": 10.7,
+    "r": 15,
+    "area_cm2": 53.8,
+    "steel_kg_m": 42.2
+   },
+   {
+    "name": "IPE 330",
+    "h": 330,
+    "b": 160,
+    "tw": 7.5,
+    "tf": 11.5,
+    "r": 18,
+    "area_cm2": 62.6,
+    "steel_kg_m": 49.1
+   },
+   {
+    "name": "IPE 360",
+    "h": 360,
+    "b": 170,
+    "tw": 8.0,
+    "tf": 12.7,
+    "r": 18,
+    "area_cm2": 72.7,
+    "steel_kg_m": 57.1
+   },
+   {
+    "name": "IPE 400",
+    "h": 400,
+    "b": 180,
+    "tw": 8.6,
+    "tf": 13.5,
+    "r": 21,
+    "area_cm2": 84.5,
+    "steel_kg_m": 66.3
+   },
+   {
+    "name": "IPE 450",
+    "h": 450,
+    "b": 190,
+    "tw": 9.4,
+    "tf": 14.6,
+    "r": 21,
+    "area_cm2": 98.8,
+    "steel_kg_m": 77.6
+   },
+   {
+    "name": "IPE 500",
+    "h": 500,
+    "b": 200,
+    "tw": 10.2,
+    "tf": 16.0,
+    "r": 21,
+    "area_cm2": 116.0,
+    "steel_kg_m": 90.7
+   },
+   {
+    "name": "IPE 550",
+    "h": 550,
+    "b": 210,
+    "tw": 11.1,
+    "tf": 17.2,
+    "r": 24,
+    "area_cm2": 134.0,
+    "steel_kg_m": 106.0
+   },
+   {
+    "name": "IPE 600",
+    "h": 600,
+    "b": 220,
+    "tw": 12.0,
+    "tf": 19.0,
+    "r": 24,
+    "area_cm2": 156.0,
+    "steel_kg_m": 122.0
+   }
+  ]
+ },
+ {
+  "id": "hea",
+  "name": "HEA (HE-A)",
+  "shape": "ibeam",
+  "source": "EN 10365 / DIN 1025-3",
+  "region": "EU",
+  "pro": true,
+  "verified": false,
+  "items": [
+   {
+    "name": "HEA 100",
+    "h": 96,
+    "b": 100,
+    "tw": 5.0,
+    "tf": 8.0,
+    "r": 12,
+    "area_cm2": 21.2,
+    "steel_kg_m": 16.7
+   },
+   {
+    "name": "HEA 120",
+    "h": 114,
+    "b": 120,
+    "tw": 5.0,
+    "tf": 8.0,
+    "r": 12,
+    "area_cm2": 25.3,
+    "steel_kg_m": 19.9
+   },
+   {
+    "name": "HEA 140",
+    "h": 133,
+    "b": 140,
+    "tw": 5.5,
+    "tf": 8.5,
+    "r": 12,
+    "area_cm2": 31.4,
+    "steel_kg_m": 24.7
+   },
+   {
+    "name": "HEA 160",
+    "h": 152,
+    "b": 160,
+    "tw": 6.0,
+    "tf": 9.0,
+    "r": 15,
+    "area_cm2": 38.8,
+    "steel_kg_m": 30.4
+   },
+   {
+    "name": "HEA 180",
+    "h": 171,
+    "b": 180,
+    "tw": 6.0,
+    "tf": 9.5,
+    "r": 15,
+    "area_cm2": 45.3,
+    "steel_kg_m": 35.5
+   },
+   {
+    "name": "HEA 200",
+    "h": 190,
+    "b": 200,
+    "tw": 6.5,
+    "tf": 10.0,
+    "r": 18,
+    "area_cm2": 53.8,
+    "steel_kg_m": 42.3
+   },
+   {
+    "name": "HEA 220",
+    "h": 210,
+    "b": 220,
+    "tw": 7.0,
+    "tf": 11.0,
+    "r": 18,
+    "area_cm2": 64.3,
+    "steel_kg_m": 50.5
+   },
+   {
+    "name": "HEA 240",
+    "h": 230,
+    "b": 240,
+    "tw": 7.5,
+    "tf": 12.0,
+    "r": 21,
+    "area_cm2": 76.8,
+    "steel_kg_m": 60.3
+   },
+   {
+    "name": "HEA 260",
+    "h": 250,
+    "b": 260,
+    "tw": 7.5,
+    "tf": 12.5,
+    "r": 24,
+    "area_cm2": 86.8,
+    "steel_kg_m": 68.2
+   },
+   {
+    "name": "HEA 280",
+    "h": 270,
+    "b": 280,
+    "tw": 8.0,
+    "tf": 13.0,
+    "r": 24,
+    "area_cm2": 97.3,
+    "steel_kg_m": 76.4
+   },
+   {
+    "name": "HEA 300",
+    "h": 290,
+    "b": 300,
+    "tw": 8.5,
+    "tf": 14.0,
+    "r": 27,
+    "area_cm2": 113.0,
+    "steel_kg_m": 88.3
+   },
+   {
+    "name": "HEA 320",
+    "h": 310,
+    "b": 300,
+    "tw": 9.0,
+    "tf": 15.5,
+    "r": 27,
+    "area_cm2": 124.0,
+    "steel_kg_m": 97.6
+   },
+   {
+    "name": "HEA 340",
+    "h": 330,
+    "b": 300,
+    "tw": 9.5,
+    "tf": 16.5,
+    "r": 27,
+    "area_cm2": 133.0,
+    "steel_kg_m": 105.0
+   },
+   {
+    "name": "HEA 360",
+    "h": 350,
+    "b": 300,
+    "tw": 10.0,
+    "tf": 17.5,
+    "r": 27,
+    "area_cm2": 143.0,
+    "steel_kg_m": 112.0
+   },
+   {
+    "name": "HEA 400",
+    "h": 390,
+    "b": 300,
+    "tw": 11.0,
+    "tf": 19.0,
+    "r": 27,
+    "area_cm2": 159.0,
+    "steel_kg_m": 125.0
+   },
+   {
+    "name": "HEA 450",
+    "h": 440,
+    "b": 300,
+    "tw": 11.5,
+    "tf": 21.0,
+    "r": 27,
+    "area_cm2": 178.0,
+    "steel_kg_m": 140.0
+   },
+   {
+    "name": "HEA 500",
+    "h": 490,
+    "b": 300,
+    "tw": 12.0,
+    "tf": 23.0,
+    "r": 27,
+    "area_cm2": 198.0,
+    "steel_kg_m": 155.0
+   }
+  ]
+ },
+ {
+  "id": "heb",
+  "name": "HEB (HE-B)",
+  "shape": "ibeam",
+  "source": "EN 10365 / DIN 1025-2",
+  "region": "EU",
+  "pro": true,
+  "verified": false,
+  "items": [
+   {
+    "name": "HEB 100",
+    "h": 100,
+    "b": 100,
+    "tw": 6.0,
+    "tf": 10.0,
+    "r": 12,
+    "area_cm2": 26.0,
+    "steel_kg_m": 20.4
+   },
+   {
+    "name": "HEB 120",
+    "h": 120,
+    "b": 120,
+    "tw": 6.5,
+    "tf": 11.0,
+    "r": 12,
+    "area_cm2": 34.0,
+    "steel_kg_m": 26.7
+   },
+   {
+    "name": "HEB 140",
+    "h": 140,
+    "b": 140,
+    "tw": 7.0,
+    "tf": 12.0,
+    "r": 12,
+    "area_cm2": 43.0,
+    "steel_kg_m": 33.7
+   },
+   {
+    "name": "HEB 160",
+    "h": 160,
+    "b": 160,
+    "tw": 8.0,
+    "tf": 13.0,
+    "r": 15,
+    "area_cm2": 54.3,
+    "steel_kg_m": 42.6
+   },
+   {
+    "name": "HEB 180",
+    "h": 180,
+    "b": 180,
+    "tw": 8.5,
+    "tf": 14.0,
+    "r": 15,
+    "area_cm2": 65.3,
+    "steel_kg_m": 51.2
+   },
+   {
+    "name": "HEB 200",
+    "h": 200,
+    "b": 200,
+    "tw": 9.0,
+    "tf": 15.0,
+    "r": 18,
+    "area_cm2": 78.1,
+    "steel_kg_m": 61.3
+   },
+   {
+    "name": "HEB 220",
+    "h": 220,
+    "b": 220,
+    "tw": 9.5,
+    "tf": 16.0,
+    "r": 18,
+    "area_cm2": 91.0,
+    "steel_kg_m": 71.5
+   },
+   {
+    "name": "HEB 240",
+    "h": 240,
+    "b": 240,
+    "tw": 10.0,
+    "tf": 17.0,
+    "r": 21,
+    "area_cm2": 106.0,
+    "steel_kg_m": 83.2
+   },
+   {
+    "name": "HEB 260",
+    "h": 260,
+    "b": 260,
+    "tw": 10.0,
+    "tf": 17.5,
+    "r": 24,
+    "area_cm2": 118.0,
+    "steel_kg_m": 93.0
+   },
+   {
+    "name": "HEB 280",
+    "h": 280,
+    "b": 280,
+    "tw": 10.5,
+    "tf": 18.0,
+    "r": 24,
+    "area_cm2": 131.0,
+    "steel_kg_m": 103.0
+   },
+   {
+    "name": "HEB 300",
+    "h": 300,
+    "b": 300,
+    "tw": 11.0,
+    "tf": 19.0,
+    "r": 27,
+    "area_cm2": 149.0,
+    "steel_kg_m": 117.0
+   },
+   {
+    "name": "HEB 320",
+    "h": 320,
+    "b": 300,
+    "tw": 11.5,
+    "tf": 20.5,
+    "r": 27,
+    "area_cm2": 161.0,
+    "steel_kg_m": 127.0
+   },
+   {
+    "name": "HEB 340",
+    "h": 340,
+    "b": 300,
+    "tw": 12.0,
+    "tf": 21.5,
+    "r": 27,
+    "area_cm2": 171.0,
+    "steel_kg_m": 134.0
+   },
+   {
+    "name": "HEB 360",
+    "h": 360,
+    "b": 300,
+    "tw": 12.5,
+    "tf": 22.5,
+    "r": 27,
+    "area_cm2": 181.0,
+    "steel_kg_m": 142.0
+   },
+   {
+    "name": "HEB 400",
+    "h": 400,
+    "b": 300,
+    "tw": 13.5,
+    "tf": 24.0,
+    "r": 27,
+    "area_cm2": 198.0,
+    "steel_kg_m": 155.0
+   },
+   {
+    "name": "HEB 450",
+    "h": 450,
+    "b": 300,
+    "tw": 14.0,
+    "tf": 26.0,
+    "r": 27,
+    "area_cm2": 218.0,
+    "steel_kg_m": 171.0
+   },
+   {
+    "name": "HEB 500",
+    "h": 500,
+    "b": 300,
+    "tw": 14.5,
+    "tf": 28.0,
+    "r": 27,
+    "area_cm2": 239.0,
+    "steel_kg_m": 187.0
+   }
+  ]
+ },
+ {
+  "id": "upn",
+  "name": "UPN",
+  "shape": "channel",
+  "source": "EN 10365 / DIN 1026-1",
+  "region": "EU",
+  "pro": false,
+  "verified": false,
+  "items": [
+   {
+    "name": "UPN 80",
+    "h": 80,
+    "b": 45,
+    "tw": 6.0,
+    "tf": 8.0,
+    "area_cm2": 11.0,
+    "steel_kg_m": 8.64
+   },
+   {
+    "name": "UPN 100",
+    "h": 100,
+    "b": 50,
+    "tw": 6.0,
+    "tf": 8.5,
+    "area_cm2": 13.5,
+    "steel_kg_m": 10.6
+   },
+   {
+    "name": "UPN 120",
+    "h": 120,
+    "b": 55,
+    "tw": 7.0,
+    "tf": 9.0,
+    "area_cm2": 17.0,
+    "steel_kg_m": 13.4
+   },
+   {
+    "name": "UPN 140",
+    "h": 140,
+    "b": 60,
+    "tw": 7.0,
+    "tf": 10.0,
+    "area_cm2": 20.4,
+    "steel_kg_m": 16.0
+   },
+   {
+    "name": "UPN 160",
+    "h": 160,
+    "b": 65,
+    "tw": 7.5,
+    "tf": 10.5,
+    "area_cm2": 24.0,
+    "steel_kg_m": 18.8
+   },
+   {
+    "name": "UPN 180",
+    "h": 180,
+    "b": 70,
+    "tw": 8.0,
+    "tf": 11.0,
+    "area_cm2": 28.0,
+    "steel_kg_m": 22.0
+   },
+   {
+    "name": "UPN 200",
+    "h": 200,
+    "b": 75,
+    "tw": 8.5,
+    "tf": 11.5,
+    "area_cm2": 32.2,
+    "steel_kg_m": 25.3
+   },
+   {
+    "name": "UPN 220",
+    "h": 220,
+    "b": 80,
+    "tw": 9.0,
+    "tf": 12.5,
+    "area_cm2": 37.4,
+    "steel_kg_m": 29.4
+   },
+   {
+    "name": "UPN 240",
+    "h": 240,
+    "b": 85,
+    "tw": 9.5,
+    "tf": 13.0,
+    "area_cm2": 42.3,
+    "steel_kg_m": 33.2
+   },
+   {
+    "name": "UPN 260",
+    "h": 260,
+    "b": 90,
+    "tw": 10.0,
+    "tf": 14.0,
+    "area_cm2": 48.3,
+    "steel_kg_m": 37.9
+   },
+   {
+    "name": "UPN 280",
+    "h": 280,
+    "b": 95,
+    "tw": 10.0,
+    "tf": 15.0,
+    "area_cm2": 53.3,
+    "steel_kg_m": 41.8
+   },
+   {
+    "name": "UPN 300",
+    "h": 300,
+    "b": 100,
+    "tw": 10.0,
+    "tf": 16.0,
+    "area_cm2": 58.8,
+    "steel_kg_m": 46.2
+   }
+  ]
+ },
+ {
+  "id": "w",
+  "name": "W (wide flange)",
+  "shape": "ibeam",
+  "source": "AISC Steel Construction Manual / ASTM A6",
+  "region": "US",
+  "pro": true,
+  "verified": false,
+  "items": [
+   {
+    "name": "W4x13",
+    "area_cm2": 24.71,
+    "steel_kg_m": 19.346,
+    "nominal_lb_ft": 13.0
+   },
+   {
+    "name": "W6x9",
+    "area_cm2": 17.29,
+    "steel_kg_m": 13.393,
+    "nominal_lb_ft": 9.0
+   },
+   {
+    "name": "W6x12",
+    "area_cm2": 22.903,
+    "steel_kg_m": 17.858,
+    "nominal_lb_ft": 12.0
+   },
+   {
+    "name": "W6x15",
+    "area_cm2": 28.581,
+    "steel_kg_m": 22.322,
+    "nominal_lb_ft": 15.0
+   },
+   {
+    "name": "W6x20",
+    "area_cm2": 37.871,
+    "steel_kg_m": 29.763,
+    "nominal_lb_ft": 20.0
+   },
+   {
+    "name": "W6x25",
+    "area_cm2": 47.355,
+    "steel_kg_m": 37.204,
+    "nominal_lb_ft": 25.0
+   },
+   {
+    "name": "W8x10",
+    "area_cm2": 19.097,
+    "steel_kg_m": 14.882,
+    "nominal_lb_ft": 10.0
+   },
+   {
+    "name": "W8x13",
+    "area_cm2": 24.774,
+    "steel_kg_m": 19.346,
+    "nominal_lb_ft": 13.0
+   },
+   {
+    "name": "W8x18",
+    "area_cm2": 33.935,
+    "steel_kg_m": 26.787,
+    "nominal_lb_ft": 18.0
+   },
+   {
+    "name": "W8x24",
+    "area_cm2": 45.677,
+    "steel_kg_m": 35.716,
+    "nominal_lb_ft": 24.0
+   },
+   {
+    "name": "W8x31",
+    "area_cm2": 58.903,
+    "steel_kg_m": 46.133,
+    "nominal_lb_ft": 31.0
+   },
+   {
+    "name": "W8x40",
+    "area_cm2": 75.484,
+    "steel_kg_m": 59.527,
+    "nominal_lb_ft": 40.0
+   },
+   {
+    "name": "W10x12",
+    "area_cm2": 22.839,
+    "steel_kg_m": 17.858,
+    "nominal_lb_ft": 12.0
+   },
+   {
+    "name": "W10x15",
+    "area_cm2": 28.452,
+    "steel_kg_m": 22.322,
+    "nominal_lb_ft": 15.0
+   },
+   {
+    "name": "W10x22",
+    "area_cm2": 41.871,
+    "steel_kg_m": 32.74,
+    "nominal_lb_ft": 22.0
+   },
+   {
+    "name": "W10x26",
+    "area_cm2": 49.097,
+    "steel_kg_m": 38.692,
+    "nominal_lb_ft": 26.0
+   },
+   {
+    "name": "W10x33",
+    "area_cm2": 62.645,
+    "steel_kg_m": 49.109,
+    "nominal_lb_ft": 33.0
+   },
+   {
+    "name": "W10x49",
+    "area_cm2": 92.903,
+    "steel_kg_m": 72.92,
+    "nominal_lb_ft": 49.0
+   },
+   {
+    "name": "W12x14",
+    "area_cm2": 26.839,
+    "steel_kg_m": 20.834,
+    "nominal_lb_ft": 14.0
+   },
+   {
+    "name": "W12x16",
+    "area_cm2": 30.387,
+    "steel_kg_m": 23.811,
+    "nominal_lb_ft": 16.0
+   },
+   {
+    "name": "W12x19",
+    "area_cm2": 35.935,
+    "steel_kg_m": 28.275,
+    "nominal_lb_ft": 19.0
+   },
+   {
+    "name": "W12x26",
+    "area_cm2": 49.355,
+    "steel_kg_m": 38.692,
+    "nominal_lb_ft": 26.0
+   },
+   {
+    "name": "W12x35",
+    "area_cm2": 66.451,
+    "steel_kg_m": 52.086,
+    "nominal_lb_ft": 35.0
+   },
+   {
+    "name": "W12x50",
+    "area_cm2": 94.193,
+    "steel_kg_m": 74.408,
+    "nominal_lb_ft": 50.0
+   },
+   {
+    "name": "W12x65",
+    "area_cm2": 123.226,
+    "steel_kg_m": 96.731,
+    "nominal_lb_ft": 65.0
+   },
+   {
+    "name": "W14x22",
+    "area_cm2": 41.871,
+    "steel_kg_m": 32.74,
+    "nominal_lb_ft": 22.0
+   },
+   {
+    "name": "W14x30",
+    "area_cm2": 57.097,
+    "steel_kg_m": 44.645,
+    "nominal_lb_ft": 30.0
+   },
+   {
+    "name": "W14x48",
+    "area_cm2": 90.968,
+    "steel_kg_m": 71.432,
+    "nominal_lb_ft": 48.0
+   },
+   {
+    "name": "W14x90",
+    "area_cm2": 170.967,
+    "steel_kg_m": 133.935,
+    "nominal_lb_ft": 90.0
+   },
+   {
+    "name": "W16x26",
+    "area_cm2": 49.548,
+    "steel_kg_m": 38.692,
+    "nominal_lb_ft": 26.0
+   },
+   {
+    "name": "W16x31",
+    "area_cm2": 58.903,
+    "steel_kg_m": 46.133,
+    "nominal_lb_ft": 31.0
+   },
+   {
+    "name": "W16x40",
+    "area_cm2": 76.129,
+    "steel_kg_m": 59.527,
+    "nominal_lb_ft": 40.0
+   },
+   {
+    "name": "W18x35",
+    "area_cm2": 66.451,
+    "steel_kg_m": 52.086,
+    "nominal_lb_ft": 35.0
+   },
+   {
+    "name": "W18x50",
+    "area_cm2": 94.839,
+    "steel_kg_m": 74.408,
+    "nominal_lb_ft": 50.0
+   },
+   {
+    "name": "W21x44",
+    "area_cm2": 83.871,
+    "steel_kg_m": 65.479,
+    "nominal_lb_ft": 44.0
+   },
+   {
+    "name": "W21x62",
+    "area_cm2": 118.064,
+    "steel_kg_m": 92.266,
+    "nominal_lb_ft": 62.0
+   },
+   {
+    "name": "W24x55",
+    "area_cm2": 104.516,
+    "steel_kg_m": 81.849,
+    "nominal_lb_ft": 55.0
+   },
+   {
+    "name": "W24x76",
+    "area_cm2": 144.516,
+    "steel_kg_m": 113.1,
+    "nominal_lb_ft": 76.0
+   }
+  ]
+ },
+ {
+  "id": "ismb",
+  "name": "ISMB",
+  "shape": "ibeam",
+  "source": "IS 808:1989",
+  "region": "IN",
+  "pro": true,
+  "verified": false,
+  "items": [
+   {
+    "name": "ISMB 100",
+    "area_cm2": 14.6,
+    "steel_kg_m": 11.5
+   },
+   {
+    "name": "ISMB 125",
+    "area_cm2": 16.6,
+    "steel_kg_m": 13.0
+   },
+   {
+    "name": "ISMB 150",
+    "area_cm2": 19.0,
+    "steel_kg_m": 14.9
+   },
+   {
+    "name": "ISMB 175",
+    "area_cm2": 24.6,
+    "steel_kg_m": 19.3
+   },
+   {
+    "name": "ISMB 200",
+    "area_cm2": 32.3,
+    "steel_kg_m": 25.4
+   },
+   {
+    "name": "ISMB 225",
+    "area_cm2": 39.7,
+    "steel_kg_m": 31.2
+   },
+   {
+    "name": "ISMB 250",
+    "area_cm2": 47.5,
+    "steel_kg_m": 37.3
+   },
+   {
+    "name": "ISMB 300",
+    "area_cm2": 56.3,
+    "steel_kg_m": 44.2
+   },
+   {
+    "name": "ISMB 350",
+    "area_cm2": 66.7,
+    "steel_kg_m": 52.4
+   },
+   {
+    "name": "ISMB 400",
+    "area_cm2": 78.5,
+    "steel_kg_m": 61.6
+   },
+   {
+    "name": "ISMB 450",
+    "area_cm2": 92.3,
+    "steel_kg_m": 72.4
+   },
+   {
+    "name": "ISMB 500",
+    "area_cm2": 110.7,
+    "steel_kg_m": 86.9
+   },
+   {
+    "name": "ISMB 550",
+    "area_cm2": 132.1,
+    "steel_kg_m": 103.7
+   },
+   {
+    "name": "ISMB 600",
+    "area_cm2": 156.2,
+    "steel_kg_m": 122.6
+   }
+  ]
+ },
+ {
+  "id": "ismc",
+  "name": "ISMC",
+  "shape": "channel",
+  "source": "IS 808:1989",
+  "region": "IN",
+  "pro": true,
+  "verified": false,
+  "items": [
+   {
+    "name": "ISMC 75",
+    "area_cm2": 8.67,
+    "steel_kg_m": 6.8
+   },
+   {
+    "name": "ISMC 100",
+    "area_cm2": 11.7,
+    "steel_kg_m": 9.2
+   },
+   {
+    "name": "ISMC 125",
+    "area_cm2": 16.2,
+    "steel_kg_m": 12.7
+   },
+   {
+    "name": "ISMC 150",
+    "area_cm2": 20.9,
+    "steel_kg_m": 16.4
+   },
+   {
+    "name": "ISMC 175",
+    "area_cm2": 24.4,
+    "steel_kg_m": 19.1
+   },
+   {
+    "name": "ISMC 200",
+    "area_cm2": 28.2,
+    "steel_kg_m": 22.1
+   },
+   {
+    "name": "ISMC 225",
+    "area_cm2": 33.0,
+    "steel_kg_m": 25.9
+   },
+   {
+    "name": "ISMC 250",
+    "area_cm2": 38.7,
+    "steel_kg_m": 30.4
+   },
+   {
+    "name": "ISMC 300",
+    "area_cm2": 45.6,
+    "steel_kg_m": 35.8
+   },
+   {
+    "name": "ISMC 350",
+    "area_cm2": 53.7,
+    "steel_kg_m": 42.1
+   },
+   {
+    "name": "ISMC 400",
+    "area_cm2": 62.9,
+    "steel_kg_m": 49.4
+   }
+  ]
+ },
+ {
+  "id": "pipe40",
+  "name": "Pipe NPS SCH 40",
+  "shape": "pipe",
+  "source": "ASME B36.10M",
+  "region": "US",
+  "pro": false,
+  "verified": false,
+  "items": [
+   {
+    "name": "NPS 1/2\"",
+    "od": 21.34,
+    "wall": 2.77
+   },
+   {
+    "name": "NPS 3/4\"",
+    "od": 26.67,
+    "wall": 2.87
+   },
+   {
+    "name": "NPS 1\"",
+    "od": 33.4,
+    "wall": 3.38
+   },
+   {
+    "name": "NPS 1-1/4\"",
+    "od": 42.16,
+    "wall": 3.56
+   },
+   {
+    "name": "NPS 1-1/2\"",
+    "od": 48.26,
+    "wall": 3.68
+   },
+   {
+    "name": "NPS 2\"",
+    "od": 60.32,
+    "wall": 3.91
+   },
+   {
+    "name": "NPS 2-1/2\"",
+    "od": 73.02,
+    "wall": 5.16
+   },
+   {
+    "name": "NPS 3\"",
+    "od": 88.9,
+    "wall": 5.49
+   },
+   {
+    "name": "NPS 4\"",
+    "od": 114.3,
+    "wall": 6.02
+   },
+   {
+    "name": "NPS 5\"",
+    "od": 141.3,
+    "wall": 6.55
+   },
+   {
+    "name": "NPS 6\"",
+    "od": 168.27,
+    "wall": 7.11
+   },
+   {
+    "name": "NPS 8\"",
+    "od": 219.07,
+    "wall": 8.18
+   },
+   {
+    "name": "NPS 10\"",
+    "od": 273.05,
+    "wall": 9.27
+   },
+   {
+    "name": "NPS 12\"",
+    "od": 323.85,
+    "wall": 10.31
+   }
+  ]
+ },
+ {
+  "id": "pipe80",
+  "name": "Pipe NPS SCH 80",
+  "shape": "pipe",
+  "source": "ASME B36.10M",
+  "region": "US",
+  "pro": true,
+  "verified": false,
+  "items": [
+   {
+    "name": "NPS 1/2\"",
+    "od": 21.34,
+    "wall": 3.73
+   },
+   {
+    "name": "NPS 3/4\"",
+    "od": 26.67,
+    "wall": 3.91
+   },
+   {
+    "name": "NPS 1\"",
+    "od": 33.4,
+    "wall": 4.55
+   },
+   {
+    "name": "NPS 1-1/4\"",
+    "od": 42.16,
+    "wall": 4.85
+   },
+   {
+    "name": "NPS 1-1/2\"",
+    "od": 48.26,
+    "wall": 5.08
+   },
+   {
+    "name": "NPS 2\"",
+    "od": 60.32,
+    "wall": 5.54
+   },
+   {
+    "name": "NPS 2-1/2\"",
+    "od": 73.02,
+    "wall": 7.01
+   },
+   {
+    "name": "NPS 3\"",
+    "od": 88.9,
+    "wall": 7.62
+   },
+   {
+    "name": "NPS 4\"",
+    "od": 114.3,
+    "wall": 8.56
+   },
+   {
+    "name": "NPS 5\"",
+    "od": 141.3,
+    "wall": 9.52
+   },
+   {
+    "name": "NPS 6\"",
+    "od": 168.27,
+    "wall": 10.97
+   },
+   {
+    "name": "NPS 8\"",
+    "od": 219.07,
+    "wall": 12.7
+   },
+   {
+    "name": "NPS 10\"",
+    "od": 273.05,
+    "wall": 15.09
+   },
+   {
+    "name": "NPS 12\"",
+    "od": 323.85,
+    "wall": 17.48
+   }
+  ]
+ },
+ {
+  "id": "rebar",
+  "name": "Rebar",
+  "shape": "rebar",
+  "source": "EN 10080 / ISO 6935-2 nominal diameters",
+  "region": "ALL",
+  "pro": false,
+  "verified": true,
+  "items": [
+   {
+    "name": "Ø6",
+    "d": 6,
+    "steel_kg_m": 0.222
+   },
+   {
+    "name": "Ø8",
+    "d": 8,
+    "steel_kg_m": 0.395
+   },
+   {
+    "name": "Ø10",
+    "d": 10,
+    "steel_kg_m": 0.617
+   },
+   {
+    "name": "Ø12",
+    "d": 12,
+    "steel_kg_m": 0.888
+   },
+   {
+    "name": "Ø14",
+    "d": 14,
+    "steel_kg_m": 1.208
+   },
+   {
+    "name": "Ø16",
+    "d": 16,
+    "steel_kg_m": 1.578
+   },
+   {
+    "name": "Ø18",
+    "d": 18,
+    "steel_kg_m": 1.998
+   },
+   {
+    "name": "Ø20",
+    "d": 20,
+    "steel_kg_m": 2.466
+   },
+   {
+    "name": "Ø22",
+    "d": 22,
+    "steel_kg_m": 2.984
+   },
+   {
+    "name": "Ø25",
+    "d": 25,
+    "steel_kg_m": 3.853
+   },
+   {
+    "name": "Ø28",
+    "d": 28,
+    "steel_kg_m": 4.834
+   },
+   {
+    "name": "Ø32",
+    "d": 32,
+    "steel_kg_m": 6.313
+   },
+   {
+    "name": "Ø36",
+    "d": 36,
+    "steel_kg_m": 7.99
+   },
+   {
+    "name": "Ø40",
+    "d": 40,
+    "steel_kg_m": 9.865
+   }
+  ]
+ }
+]
