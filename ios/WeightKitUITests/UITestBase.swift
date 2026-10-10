@@ -104,6 +104,13 @@ class UITestBase: XCTestCase {
         // the value may equal the placeholder ("€"), so always delete
         let old = f.value as? String ?? ""
         f.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: old.count + 2))
+        // newer iOS may put the cursor at the start of a right-aligned field: delete word by word instead
+        var n = 0
+        while n < 6, let v = f.value as? String, !v.isEmpty, v != f.placeholderValue {
+            f.doubleTap()
+            f.typeText(XCUIKeyboardKey.delete.rawValue)
+            n += 1
+        }
         if !text.isEmpty { f.typeText(text) }
         dismissKeyboard()
         let now = f.value as? String ?? ""
