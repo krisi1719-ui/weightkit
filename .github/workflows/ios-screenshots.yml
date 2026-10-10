@@ -1,0 +1,96 @@
+# Runs the iOS unit tests and makes the App Store screenshots (iPhone 17 Pro simulator = 1206×2622)
+# in every store language. Download the "app-store-screenshots" artifact when it is done.
+name: iOS tests and screenshots
+
+on:
+  workflow_dispatch:
+    inputs:
+      langs:
+        description: Store languages (space separated)
+        default: en de fr es tr ru bg
+
+jobs:
+  ios:
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      SIM: iPhone 17 Pro
+      SIGN: CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= PROVISIONING_PROFILE_SPECIFIER=
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Simulator
+        run: |
+          xcodebuild -version
+          xcrun simctl list devices available | grep -E 'iPhone' | head -20
+          xcrun simctl boot "$SIM" || true
+          xcrun simctl bootstatus "$SIM" -b
+          xcrun simctl status_bar "$SIM" override --time 9:41 --dataNetwork wifi --wifiMode active --wifiBars 3 \
+            --cellularMode active --cellularBars 4 --operatorName '' --batteryState charged --batteryLevel 100
+
+      - name: Build for testing
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing -project ios/WeightKit.xcodeproj -scheme WeightKit \
+            -destination "platform=iOS Simulator,name=$SIM" -derivedDataPath build/dd $SIGN \
+            | grep -E '^(\*\*|error:|.*: error:)' || exit 1
+
+      - name: Unit tests
+        continue-on-error: true
+        run: |
+          xcodebuild test-without-building -project ios/WeightKit.xcodeproj -scheme WeightKit \
+            -destination "platform=iOS Simulator,name=$SIM" -derivedDataPath build/dd \
+            -only-testing:WeightKitTests -resultBundlePath build/unit.xcresult 2>&1 | grep -E 'Test Case.*(passed|failed)|error:|\*\*' | tail -80
+
+      - name: Screenshots
+        continue-on-error: true
+        run: |
+          ONLY=""
+          for l in ${{ inputs.langs }}; do ONLY="$ONLY -only-testing:WeightKitUITests/StoreScreenshotsTests/test_$l"; done
+          xcodebuild test-without-building -project ios/WeightKit.xcodeproj -scheme WeightKit \
+            -destination "platform=iOS Simulator,name=$SIM" -derivedDataPath build/dd \
+            $ONLY -resultBundlePath build/shots.xcresult 2>&1 | grep -E 'Test Case.*(passed|failed)|error:|\*\*' | tail -60
+
+      - name: Export screenshots
+        if: always()
+        run: |
+          mkdir -p out/raw
+          xcrun xcresulttool export attachments --path build/shots.xcresult --output-path out/raw || true
+          python3 - <<'PY'
+          import json, os, shutil
+          d = 'out/raw'
+          m = os.path.join(d, 'manifest.json')
+          if os.path.exists(m):
+              for test in json.load(open(m)):
+                  for a in test.get('attachments', []):
+                      name = a.get('suggestedHumanReadableName', '')
+                      if not name.startswith('store_'):
+                          continue
+                      base = name.split('_0_')[0].rsplit('.', 1)[0]
+                      _, lang, shot = base.split('_', 2)
+                      os.makedirs(f'out/store/{lang}', exist_ok=True)
+                      shutil.copy(os.path.join(d, a['exportedFileName']), f'out/store/{lang}/{shot}.png')
+          for root, _, files in os.walk('out/store'):
+              for f in sorted(files):
+                  print(os.path.join(root, f))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: app-store-screenshots
+          path: out/store
+          if-no-files-found: warn
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            build/unit.xcresult
+            build/shots.xcresult
+          if-no-files-found: ignore
