@@ -8,9 +8,8 @@ on:
       steps:
         description: What to update (meta,age,shots,iaps,availability,build)
         default: meta,age,shots,iaps,availability
-      shot_type:
-        description: Screenshot display type
-        default: APP_IPHONE_67
+  push:
+    branches: [run/asc-setup]   # push to this branch = run the steps listed in ci/asc_steps.txt
 
 permissions:
   contents: write
@@ -24,7 +23,6 @@ jobs:
       APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
       ASC_APP_ID: '6821445966'
       STEPS: ${{ inputs.steps }}
-      SHOT_TYPE: ${{ inputs.shot_type }}
     steps:
       - uses: actions/checkout@v5
       - run: pip install pyjwt cryptography requests

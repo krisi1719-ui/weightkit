@@ -14,7 +14,9 @@ API = "https://api.appstoreconnect.apple.com"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 META = json.load(open(os.path.join(ROOT, "ci", "appstore_metadata.json"), encoding="utf-8"))
 APP = os.environ["ASC_APP_ID"]
-STEPS = set((os.environ.get("STEPS") or "meta,age,shots,iaps,availability,build").replace(" ", "").split(","))
+_steps_file = os.path.join(ROOT, "ci", "asc_steps.txt")  # used when started by a push (no workflow inputs)
+STEPS = set((os.environ.get("STEPS") or (open(_steps_file).read().strip() if os.path.exists(_steps_file) else "")
+             or "meta,age,shots,iaps,availability,build").replace(" ", "").split(","))
 ERRORS = []
 
 
@@ -151,12 +153,14 @@ if "age" in STEPS:
 
 # ---------------------------------------------------------------- screenshots
 if "shots" in STEPS:
-    dtype = os.environ.get("SHOT_TYPE", "APP_IPHONE_67")
+    # display type -> folder: 6.9" (1320x2868, required) and 6.3" (1206x2622)
+    SHOT_SETS = {"APP_IPHONE_67": "appstore-69", "APP_IPHONE_61": "appstore"}
     locs = {l["attributes"]["locale"]: l["id"] for l in get_all(f"/v1/appStoreVersions/{vid}/appStoreVersionLocalizations")}
-    for loc, lid in sorted(locs.items()):
-        files = sorted(glob.glob(os.path.join(ROOT, "store-assets", "appstore", loc, "*.png")))
+    for dtype, folder in SHOT_SETS.items():
+     for loc, lid in sorted(locs.items()):
+        files = sorted(glob.glob(os.path.join(ROOT, "store-assets", folder, loc, "*.png")))
         if not files:
-            print("no screenshots for", loc); continue
+            print("no screenshots for", loc, dtype); continue
         sets = call("GET", f"/v1/appStoreVersionLocalizations/{lid}/appScreenshotSets")["data"]
         s = next((x for x in sets if x["attributes"]["screenshotDisplayType"] == dtype), None)
         if s is None:
@@ -179,10 +183,11 @@ if "shots" in STEPS:
             md5 = upload(shot["attributes"]["uploadOperations"], f)
             call("PATCH", f"/v1/appScreenshots/{shot['id']}", {"data": {"type": "appScreenshots", "id": shot["id"],
                  "attributes": {"uploaded": True, "sourceFileChecksum": md5}}}, soft=True)
-        time.sleep(3)
-        states = [x["attributes"].get("assetDeliveryState", {}).get("state") for x in
+        time.sleep(5)
+        states = [x["attributes"].get("assetDeliveryState", {}) for x in
                   call("GET", f"/v1/appScreenshotSets/{s['id']}/appScreenshots")["data"]]
-        print("Screenshots", loc, dtype, len(files), states)
+        print("Screenshots", loc, dtype, len(files), [st.get("state") for st in states],
+              [e for st in states for e in (st.get("errors") or [])][:3])
 
 # ---------------------------------------------------------------- in-app purchases
 if "iaps" in STEPS:

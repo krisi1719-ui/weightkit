@@ -7,7 +7,9 @@ on:
     inputs:
       langs:
         description: Store languages (space separated)
-        default: en de fr es tr ru bg
+        default: en de fr es tr ru
+  push:
+    branches: [run/screenshots]   # push to this branch = run with the default languages
 
 permissions:
   contents: write
@@ -53,7 +55,7 @@ jobs:
         continue-on-error: true
         run: |
           ONLY=""
-          for l in ${{ inputs.langs }} paywall; do ONLY="$ONLY -only-testing:WeightKitUITests/StoreScreenshotsTests/test_$l"; done
+          for l in ${{ inputs.langs || 'en de fr es tr ru' }} paywall; do ONLY="$ONLY -only-testing:WeightKitUITests/StoreScreenshotsTests/test_$l"; done
           xcodebuild test-without-building -project ios/WeightKit.xcodeproj -scheme WeightKit \
             -destination "platform=iOS Simulator,name=$SIM" -derivedDataPath build/dd \
             $ONLY -resultBundlePath build/shots.xcresult 2>&1 | tee build/shots.log | grep -E 'Test Case.*(passed|failed)|error:|\*\*' | tail -60
