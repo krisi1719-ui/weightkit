@@ -57,6 +57,9 @@ final class StoreScreenshotsTests: UITestBase {
 
     /// Relaunch keeping the state: no focused field, cursor or keyboard toolbar on the picture.
     private func clean(_ l: L, theme: String = "light") {
+        // to the background first: the calculator saves its fields there (a plain terminate would lose them)
+        XCUIDevice.shared.press(.home)
+        sleep(2)
         app.terminate()
         start(l, reset: false, theme: theme)
     }
