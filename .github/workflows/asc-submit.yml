@@ -9,6 +9,9 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: write
+
 jobs:
   submit:
     runs-on: ubuntu-latest
@@ -31,4 +34,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: pip install pyjwt cryptography requests
-      - run: python ci/asc_submit.py
+      - run: mkdir -p out && python ci/asc_submit.py 2>&1 | tee out/asc_submit.log; exit ${PIPESTATUS[0]}
+        shell: bash
+
+      - name: Publish output to branch ci-out/asc-submit
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p out
+          cd out
+          git init -q -b out && git add -A
+          git -c user.name=ci -c user.email=ci@localhost commit -qm "run ${{ github.run_id }}" --allow-empty
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" out:ci-out/asc-submit

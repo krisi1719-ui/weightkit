@@ -9,6 +9,9 @@ on:
         description: Store languages (space separated)
         default: en de fr es tr ru bg
 
+permissions:
+  contents: write
+
 jobs:
   ios:
     runs-on: macos-26
@@ -44,7 +47,7 @@ jobs:
         run: |
           xcodebuild test-without-building -project ios/WeightKit.xcodeproj -scheme WeightKit \
             -destination "platform=iOS Simulator,name=$SIM" -derivedDataPath build/dd \
-            -only-testing:WeightKitTests -resultBundlePath build/unit.xcresult 2>&1 | grep -E 'Test Case.*(passed|failed)|error:|\*\*' | tail -80
+            -only-testing:WeightKitTests -resultBundlePath build/unit.xcresult 2>&1 | tee build/unit.log | grep -E 'Test Case.*(passed|failed)|error:|\*\*' | tail -80
 
       - name: Screenshots
         continue-on-error: true
@@ -53,7 +56,7 @@ jobs:
           for l in ${{ inputs.langs }} paywall; do ONLY="$ONLY -only-testing:WeightKitUITests/StoreScreenshotsTests/test_$l"; done
           xcodebuild test-without-building -project ios/WeightKit.xcodeproj -scheme WeightKit \
             -destination "platform=iOS Simulator,name=$SIM" -derivedDataPath build/dd \
-            $ONLY -resultBundlePath build/shots.xcresult 2>&1 | grep -E 'Test Case.*(passed|failed)|error:|\*\*' | tail -60
+            $ONLY -resultBundlePath build/shots.xcresult 2>&1 | tee build/shots.log | grep -E 'Test Case.*(passed|failed)|error:|\*\*' | tail -60
 
       - name: Export screenshots
         if: always()
@@ -78,6 +81,24 @@ jobs:
               for f in sorted(files):
                   print(os.path.join(root, f))
           PY
+
+      - name: Collect logs
+        if: always()
+        run: |
+          mkdir -p out/store/logs
+          grep -E 'Test Case|error|failed|XCTAssert' build/unit.log | tail -300 > out/store/logs/unit.txt || true
+          grep -E 'Test Case|error|failed|XCTAssert' build/shots.log | tail -300 > out/store/logs/shots.txt || true
+
+      - name: Publish output to branch ci-out/screenshots
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p out/store
+          cd out/store
+          git init -q -b out && git add -A
+          git -c user.name=ci -c user.email=ci@localhost commit -qm "run ${{ github.run_id }}" --allow-empty
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" out:ci-out/screenshots
 
       - uses: actions/upload-artifact@v4
         if: always()

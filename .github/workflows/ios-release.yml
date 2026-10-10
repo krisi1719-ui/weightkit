@@ -15,6 +15,9 @@ concurrency:
   group: ios-release
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   ios:
     runs-on: macos-26
@@ -111,6 +114,24 @@ jobs:
 
       - name: Upload to App Store Connect
         run: app-store-connect publish --path "$(ls build/ios/ipa/*.ipa | head -1)"
+
+      - name: Collect log
+        if: always()
+        run: |
+          mkdir -p out
+          echo "build ${BUILD_NUMBER:-?}" > out/build.txt
+          tail -120 "$RUNNER_TEMP/archive.log" > out/archive_tail.log 2>/dev/null || true
+
+      - name: Publish output to branch ci-out/ios-release
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p out
+          cd out
+          git init -q -b out && git add -A
+          git -c user.name=ci -c user.email=ci@localhost commit -qm "run ${{ github.run_id }}" --allow-empty
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" out:ci-out/ios-release
 
       - uses: actions/upload-artifact@v4
         if: always()

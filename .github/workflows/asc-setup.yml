@@ -12,6 +12,9 @@ on:
         description: Screenshot display type
         default: APP_IPHONE_67
 
+permissions:
+  contents: write
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -25,4 +28,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: pip install pyjwt cryptography requests
-      - run: python ci/asc_setup.py
+      - run: mkdir -p out && python ci/asc_setup.py 2>&1 | tee out/asc_setup.log; exit ${PIPESTATUS[0]}
+        shell: bash
+
+      - name: Publish output to branch ci-out/asc-setup
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p out
+          cd out
+          git init -q -b out && git add -A
+          git -c user.name=ci -c user.email=ci@localhost commit -qm "run ${{ github.run_id }}" --allow-empty
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" out:ci-out/asc-setup
