@@ -1,0 +1,28 @@
+# Sets the App Store Connect metadata through the API (texts, categories, age rating, screenshots,
+# in-app purchases, availability). Prices and App Privacy are done in the website.
+name: App Store metadata
+
+on:
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: What to update (meta,age,shots,iaps,availability)
+        default: meta,age,shots,iaps,availability
+      shot_type:
+        description: Screenshot display type
+        default: APP_IPHONE_67
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    env:
+      APP_STORE_CONNECT_ISSUER_ID: c03b092c-a697-4603-9350-7f39fccc9c75
+      APP_STORE_CONNECT_KEY_IDENTIFIER: H8TC4F4CTP
+      APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      ASC_APP_ID: '6821445966'
+      STEPS: ${{ inputs.steps }}
+      SHOT_TYPE: ${{ inputs.shot_type }}
+    steps:
+      - uses: actions/checkout@v5
+      - run: pip install pyjwt cryptography requests
+      - run: python ci/asc_setup.py
