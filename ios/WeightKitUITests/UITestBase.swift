@@ -106,7 +106,9 @@ class UITestBase: XCTestCase {
         f.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: old.count + 2))
         // newer iOS may put the cursor at the start of a right-aligned field: delete word by word instead
         var n = 0
-        while n < 6, let v = f.value as? String, !v.isEmpty, v != f.placeholderValue {
+        // a numeric placeholder ("0") can also be the real value of a number field, so clear it too (at most 3×)
+        while n < 6, let v = f.value as? String, !v.isEmpty,
+              v != f.placeholderValue || (Double(v) != nil && n < 3) {
             f.doubleTap()
             f.typeText(XCUIKeyboardKey.delete.rawValue)
             n += 1
