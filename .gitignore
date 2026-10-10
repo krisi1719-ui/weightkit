@@ -27,3 +27,13 @@ test-artifacts/
 *.p12
 *.pem
 keystore/
+# signing secrets – never commit
+keystore/
+*.p8
+*.p12
+*.pem
+*.mobileprovision
+ios/build-release/
+ios/build-signed/
+build-logs/
+test-artifacts/

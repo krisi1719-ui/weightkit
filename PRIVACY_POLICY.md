@@ -1,6 +1,6 @@
 # WeightKit – Privacy Policy
 
-_Effective date: 6 October 2026 · Last updated: 6 October 2026_
+_Effective date: 6 October 2026 · Last updated: 11 October 2026_
 
 This privacy policy explains how the **WeightKit – Metal Weight Calculator** app for Android and iPhone ("WeightKit", "the app") handles information. The app is published by **GGSHOP LIMITED** ("we", "us", "our"), which is the data controller for the data described in this policy.
 
@@ -20,14 +20,14 @@ Everything you enter in the app – dimensions, materials and densities, prices 
 
 - **PDF and CSV export:** files are created on your device. They leave your device only if you choose to share them (for example by e-mail or a messaging app) through your phone's share sheet; the app you share with handles them under its own privacy policy.
 - **Backups:** your phone's own backup (Android Auto Backup to your Google account, or iCloud / device backup on iPhone) may include the app's settings and lists. These backups are handled by Google or Apple under their privacy policies; we cannot access them.
-- **iPhone free trial:** the iPhone app keeps the free-trial start date in the device Keychain and reads Apple's signed record of when you first downloaded the app (AppTransaction). This stays on your device and with Apple; nothing is sent to us.
+- **iPhone free trial:** on iPhone you start the 14-day trial yourself with a free in-app item ("14-day Trial") from the App Store. Its start date comes from Apple's signed purchase record and a copy is kept in the device Keychain. This stays on your device and with Apple; nothing is sent to us.
 - Deleting the app deletes this data from the device (except a Keychain entry on iPhone, which iOS may keep, and any phone backups you have made).
 
 ## 3. Permissions the app uses
 
 - **Internet / network state** – to load ads, to check purchases with the store and (Android) to reach our trial and purchase server.
 - **Advertising ID (Android, `AD_ID`)** – used by Google AdMob in the free version (section 5).
-- **App Tracking Transparency (iPhone)** – the app asks for permission before ads may use the iPhone's advertising identifier (IDFA). If you decline, ads are not personalised with it.
+- **No tracking on iPhone** – the iPhone app does not ask for App Tracking Transparency permission and does not give the advertising identifier (IDFA) to ads, so ads on iPhone are not personalised with it.
 
 The app does **not** use location, camera, microphone, contacts, photos, files outside its own folder, or any account login.
 
@@ -57,7 +57,7 @@ The free version of WeightKit shows a small number of ads served by **Google AdM
 
 **Ad types:** a small banner on the Lists screen; occasionally a full-screen ad when opening the Lists screen (at most once every 48 hours); and an optional rewarded ad that you can choose to watch to unlock Pro for 24 hours. No ads are shown on the calculator or during a calculation.
 
-**Data AdMob may collect:** your device's advertising identifier (Android Advertising ID or Apple IDFA, if allowed), IP address and approximate location derived from it, device and app information (model, operating system, language, app version), and ad interaction data (ads shown, clicks, viewing time). Google uses this data to show, measure and improve ads, to limit how often you see an ad, and to detect fraud and abuse. Google may use cookies or similar technologies (such as the advertising identifier) for this purpose.
+**Data AdMob may collect:** your device's advertising identifier (Android Advertising ID; on iPhone the IDFA is not used), IP address and approximate location derived from it, device and app information (model, operating system, language, app version), and ad interaction data (ads shown, clicks, viewing time). Google uses this data to show, measure and improve ads, to limit how often you see an ad, and to detect fraud and abuse. Google may use cookies or similar technologies (such as the advertising identifier) for this purpose.
 
 Google acts as an independent controller of this data. Learn more:
 
@@ -68,7 +68,7 @@ Google acts as an independent controller of this data. Learn more:
 **Your choices:**
 
 - **EEA, UK and Switzerland:** before any ad is requested, you are asked for consent through Google's consent form (User Messaging Platform). You can choose non-personalised ads or refuse personalised advertising. You can change your choice at any time in the app under **Settings → Ad privacy settings**.
-- **iPhone:** ads are personalised with the IDFA only if you allow tracking. You can change this at any time in iOS **Settings → Privacy & Security → Tracking**.
+- **iPhone:** the app does not track you and does not use the IDFA.
 - **Android:** you can reset or delete your advertising ID or opt out of ad personalisation in your device settings (**Settings → Google → Ads**, or **Settings → Privacy → Ads**, depending on the device).
 - **Remove ads completely:** buy WeightKit Pro.
 
@@ -90,7 +90,7 @@ WeightKit Pro is a one-time in-app purchase processed by **Google Play** (Androi
 
 We share data only with: **Google** (AdMob advertising and Google Play purchase verification) and **Apple** (App Store purchases), as described above, and with our hosting provider, which runs our server on our behalf. We may disclose information if required by law.
 
-We **do not sell** personal information and we do not use your data for our own advertising profiles. Under some US state laws (for example California), the use of advertising identifiers by AdMob for personalised ads may be considered "sharing" for cross-context behavioural advertising; you can opt out by turning off ad personalisation or deleting/resetting your advertising ID in your device settings (section 5), by declining tracking on iPhone, or by buying Pro.
+We **do not sell** personal information and we do not use your data for our own advertising profiles. Under some US state laws (for example California), the use of advertising identifiers by AdMob for personalised ads may be considered "sharing" for cross-context behavioural advertising; you can opt out by turning off ad personalisation or deleting/resetting your advertising ID in your device settings (section 5) or by buying Pro.
 
 Google, Apple and our hosting provider may process data in countries other than your own, including the United States. Where required, these transfers are protected by appropriate safeguards such as the European Commission's Standard Contractual Clauses or the UK equivalent.
 
