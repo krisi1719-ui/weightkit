@@ -121,6 +121,22 @@ final class StoreScreenshotsTests: UITestBase {
         store("08_dark")
     }
 
+    /// In-app purchase review screenshot: the Pro screen of a new user (trial not started yet).
+    func test_paywall() {
+        current = "review"
+        app = XCUIApplication()
+        app.launchArguments = ["-wkUITest", "-wkReset", "-AppleLanguages", "(en)", "-AppleLocale", "en_US",
+                               "-theme", "light", "-units", "imperial", "-currency", "$"]
+        app.launch()
+        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 20))
+        tab(2)
+        tap("settings_pro")
+        XCTAssertTrue(exists("paywall", 5))
+        _ = el("start_trial").waitForExistence(timeout: 8)
+        sleep(2)
+        store("paywall")
+    }
+
     func test_en() { run("en") }
     func test_de() { run("de") }
     func test_fr() { run("fr") }
