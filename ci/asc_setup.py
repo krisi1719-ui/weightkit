@@ -14,7 +14,7 @@ API = "https://api.appstoreconnect.apple.com"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 META = json.load(open(os.path.join(ROOT, "ci", "appstore_metadata.json"), encoding="utf-8"))
 APP = os.environ["ASC_APP_ID"]
-STEPS = set((os.environ.get("STEPS") or "meta,age,shots,iaps,availability").replace(" ", "").split(","))
+STEPS = set((os.environ.get("STEPS") or "meta,age,shots,iaps,availability,build").replace(" ", "").split(","))
 ERRORS = []
 
 
@@ -236,6 +236,23 @@ if "iaps" in STEPS:
                      "type": "inAppPurchaseAppStoreReviewScreenshots", "id": sid,
                      "attributes": {"uploaded": True, "sourceFileChecksum": md5}}}, soft=True)
                 print("  review screenshot uploaded")
+
+# ---------------------------------------------------------------- build
+if "build" in STEPS:
+    builds = call("GET", f"/v1/builds?filter[app]={APP}&sort=-uploadedDate&limit=10&include=preReleaseVersion")
+    for b in builds["data"]:
+        a = b["attributes"]
+        print("Build", a["version"], a["processingState"], "expired" if a.get("expired") else "", a.get("uploadedDate"))
+    valid = [b for b in builds["data"] if b["attributes"]["processingState"] == "VALID" and not b["attributes"].get("expired")]
+    if valid:
+        b = valid[0]
+        if b["attributes"].get("usesNonExemptEncryption") is None:
+            call("PATCH", f"/v1/builds/{b['id']}", {"data": {"type": "builds", "id": b["id"],
+                 "attributes": {"usesNonExemptEncryption": False}}}, soft=True)
+        call("PATCH", f"/v1/appStoreVersions/{vid}/relationships/build", {"data": {"type": "builds", "id": b["id"]}}, soft=True)
+        print("Attached build", b["attributes"]["version"], "to version", ver["attributes"]["versionString"])
+    else:
+        print("No VALID build yet")
 
 # ---------------------------------------------------------------- app availability
 if "availability" in STEPS:

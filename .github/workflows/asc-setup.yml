@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       steps:
-        description: What to update (meta,age,shots,iaps,availability)
+        description: What to update (meta,age,shots,iaps,availability,build)
         default: meta,age,shots,iaps,availability
       shot_type:
         description: Screenshot display type
