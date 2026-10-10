@@ -122,13 +122,15 @@ if "age" in STEPS:
     print("Age rating fields:", json.dumps(decl["attributes"]))
     want = {}
     for k, v in decl["attributes"].items():
-        if k in ("kidsAgeBand", "ageRatingOverride", "ageRatingOverrideV2", "koreaAgeRatingOverride", "developerAgeRatingInfoUrl"):
+        if k in ("kidsAgeBand", "ageRatingOverride", "ageRatingOverrideV2", "koreaAgeRatingOverride", "developerAgeRatingInfoUrl",
+                 "gracRatingClassificationNumber"):
             continue
         if k == "advertising":
             want[k] = True          # the free version shows ads
         elif isinstance(v, bool) or k in ("gambling", "unrestrictedWebAccess", "lootBox", "messagingAndChat",
                                           "parentalControls", "ageAssurance", "userGeneratedContent",
-                                          "healthOrWellnessTopics", "seventeenPlus"):
+                                          "healthOrWellnessTopics", "seventeenPlus", "socialMedia",
+                                          "socialMediaAgeRestricted"):
             want[k] = False
         elif v is None or isinstance(v, str):
             want[k] = "NONE"
