@@ -9,6 +9,9 @@ ADB=~/Library/Android/sdk/platform-tools/adb
 ( cd android && ./gradlew testDebugUnitTest processDebugManifest bundleRelease assembleRelease > ../$LOG 2>&1; echo "exit $?" >> ../$LOG )
 "$JAVA_HOME/bin/jarsigner" -verify -verbose:summary android/app/build/outputs/bundle/release/app-release.aab >> $LOG 2>&1
 
+echo "== androidx.fragment in the release app ==" >> $LOG
+( cd android && ./gradlew -q :app:dependencies --configuration releaseRuntimeClasspath 2>/dev/null | grep -E "androidx.fragment:fragment[:\ ]" | sort -u | head -5 ) >> $LOG
+
 echo "== R8 keeps WorkDatabase_Impl constructor? ==" >> $LOG
 awk '/^androidx.work.impl.WorkDatabase_Impl ->/{f=1;next} /^[^ ]/{f=0} f&&/<init>/' android/app/build/outputs/mapping/release/mapping.txt | head -2 >> $LOG
 

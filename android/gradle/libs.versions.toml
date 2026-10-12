@@ -9,6 +9,7 @@ composeBom = "2026.02.01"
 billing = "8.0.0"
 playServicesAds = "24.4.0"
 ump = "3.2.0"
+fragment = "1.9.1"
 orgJson = "20250517"
 testRunner = "1.7.0"
 testCore = "1.7.0"
@@ -31,6 +32,7 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAds" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 ump = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "ump" }
 billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
 

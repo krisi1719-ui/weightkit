@@ -17,8 +17,8 @@ android {
         applicationId = "com.weightkit.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.0.4"
+        versionCode = 6
+        versionName = "1.0.5"
         // AdMob app ID: real WeightKit (Android) app in release, Google's test app ID in debug (see buildTypes).
         manifestPlaceholders["admobAppId"] = "ca-app-pub-4705847427752554~3826175222"
 
@@ -87,6 +87,8 @@ dependencies {
     implementation(libs.billing.ktx)
     implementation(libs.play.services.ads)
     implementation(libs.ump)
+    // UMP / Play libraries pull fragment 1.1.0, which Play Console reports as outdated
+    implementation(libs.androidx.fragment)
     testImplementation(libs.junit)
     testImplementation(libs.org.json)
     debugImplementation(libs.androidx.compose.ui.tooling)
