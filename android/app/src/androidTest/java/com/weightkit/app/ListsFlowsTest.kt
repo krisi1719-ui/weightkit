@@ -123,6 +123,8 @@ class ListsFlowsTest : UiTestBase() {
         type("list_name", "Оферта \"Иванов\", 2026")
         type("field_waste", "10")
         type("field_markup", "20")
+        androidx.test.espresso.Espresso.closeSoftKeyboard()
+        compose.waitForIdle()
         runCatching { node("export_pdf").performScrollTo() }
         screenshot("f09_export_buttons")
         Intents.init()
@@ -169,6 +171,11 @@ class ListsFlowsTest : UiTestBase() {
         screenshot("f09_share_sheet")
         assertTrue("share sheet", chooser)
         device.pressBack()
+        // settings: the three company fields for the PDF
+        if (!exists("tab_settings")) device.pressBack()
+        tab("settings")
+        runCatching { node("company_contact").performScrollTo() }
+        screenshot("f09_settings_company")
     }
 
     @Test fun f09b_export_afterTrial_paywall() {
