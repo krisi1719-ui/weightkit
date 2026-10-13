@@ -10,6 +10,7 @@ $ADB shell settings put global window_animation_scale 0; $ADB shell settings put
 $ADB shell settings put global animator_duration_scale 0
 OUT=android/app/build/outputs/connected_android_test_additional_output
 rm -rf "$OUT" build-logs/check
+$ADB uninstall com.weightkit.app >/dev/null 2>&1  # release build is signed with a different key
 ( cd android && ./gradlew connectedDebugAndroidTest \
     -Pandroid.testInstrumentationRunnerArguments.class=com.weightkit.app.ListsFlowsTest#f09_exportPdfCsv_content > ../$LOG 2>&1; echo "exit $?" >> ../$LOG )
 mkdir -p build-logs/check
