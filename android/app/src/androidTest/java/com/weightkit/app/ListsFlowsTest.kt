@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.ParcelFileDescriptor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.Intents.intending
@@ -111,13 +112,19 @@ class ListsFlowsTest : UiTestBase() {
 
     /** Flow 9: export PDF and CSV → share intent carries the file; content is right (title, company, rows, totals, Cyrillic). */
     @Test fun f09_exportPdfCsv_content() {
-        launch(prefs = { putString("currency", "лв"); putString("company", "Метал ООД") })
+        launch(prefs = {
+            putString("currency", "лв"); putString("company", "Метал ООД")
+            putString("companyAddress", "ул. Индустриална 12, 1000 София")
+            putString("companyContact", "0888 123 456 · office@metal.bg · ЕИК 123456789")
+        })
         addThreeItems()
         tab("lists")
         tap("list_row")
         type("list_name", "Оферта \"Иванов\", 2026")
         type("field_waste", "10")
         type("field_markup", "20")
+        runCatching { node("export_pdf").performScrollTo() }
+        screenshot("f09_export_buttons")
         Intents.init()
         try {
             intending(hasAction(Intent.ACTION_CHOOSER)).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
