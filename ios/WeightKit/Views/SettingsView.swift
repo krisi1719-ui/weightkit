@@ -44,9 +44,15 @@ struct SettingsView: View {
                             .accessibilityIdentifier("currency")
                     }
                 }
-                Section(L("company")) {
-                    TextField(L("company"), text: $settings.company)
+                Section(L("company_pdf")) {
+                    TextField(L("company_name"), text: $settings.company)
                         .accessibilityIdentifier("company")
+                    TextField(L("company_address"), text: $settings.companyAddress, axis: .vertical)
+                        .lineLimit(1...2)
+                        .accessibilityIdentifier("company_address")
+                    TextField(L("company_contact"), text: $settings.companyContact, axis: .vertical)
+                        .lineLimit(1...2)
+                        .accessibilityIdentifier("company_contact")
                 }
                 Section(L("theme")) {
                     Picker(L("theme"), selection: $settings.theme) {

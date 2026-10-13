@@ -78,18 +78,24 @@ enum Exporter {
 
             newPage()
             // title block
+            let top = y
             accent.setFill()
-            UIBezierPath(rect: CGRect(x: margin, y: y, width: 6, height: 44)).fill()
+            UIBezierPath(rect: CGRect(x: margin, y: top, width: 6, height: 44)).fill()
             _ = draw(L("pdf_title"), title, x: margin + 14, width: 300)
-            let company = settings.company
-            if !company.isEmpty {
-                _ = draw(company, bold, x: page.width - margin - 220, width: 220, align: .right)
-            }
-            y += 26
+            y = top + 26
             _ = draw(list.name, body, x: margin + 14, width: 300, color: .darkGray)
-            _ = draw(L("date") + ": " + Fmt.date(Date()), body, x: page.width - margin - 220, width: 220,
-                     color: .darkGray, align: .right)
-            y += 34
+            // right column: company name, address, contact, then the date
+            let rx = page.width - margin - 220
+            y = top
+            let company = settings.company.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !company.isEmpty { y += draw(company, bold, x: rx, width: 220, align: .right) }
+            for line in [settings.companyAddress, settings.companyContact] {
+                let t = line.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !t.isEmpty { y += draw(t, body, x: rx, width: 220, color: .darkGray, align: .right) }
+            }
+            y = max(y + 2, top + 26)
+            y += draw(L("date") + ": " + Fmt.date(Date()), body, x: rx, width: 220, color: .darkGray, align: .right)
+            y = max(y, top + 44) + 16
             header()
 
             for (i, it) in list.items.enumerated() {

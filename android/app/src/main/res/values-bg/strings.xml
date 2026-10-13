@@ -85,6 +85,10 @@
     <string name="imperial">Имперски (in, ft, lb)</string>
     <string name="currency">Символ на валутата</string>
     <string name="company">Име на фирмата (за PDF)</string>
+    <string name="company_pdf">Фирма (за PDF)</string>
+    <string name="company_name">Име на фирмата</string>
+    <string name="company_address">Адрес</string>
+    <string name="company_contact">Телефон / e-mail / ЕИК</string>
     <string name="theme">Изглед</string>
     <string name="theme_system">Системен</string>
     <string name="theme_light">Светъл</string>

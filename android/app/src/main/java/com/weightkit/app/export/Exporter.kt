@@ -106,14 +106,22 @@ object Exporter {
         }
 
         newPage()
+        val top = y
         fill.color = accent
-        page!!.canvas.drawRect(margin, y, margin + 6, y + 44, fill)
+        page!!.canvas.drawRect(margin, top, margin + 6, top + 44, fill)
         text(ctx.getString(R.string.pdf_title), title, margin + 14, 300f)
-        if (s.company.isNotBlank()) text(s.company, bold, pageW - margin - 220, 220f, right = true)
-        y += 28f
+        y = top + 28f
         text(list.name, gray, margin + 14, 300f)
-        text(ctx.getString(R.string.date) + ": " + Fmt.date(System.currentTimeMillis()), gray, pageW - margin - 220, 220f, right = true)
-        y += 32f
+        // right column: company name, address, contact, then the date
+        val rx = pageW - margin - 220
+        y = top
+        if (s.company.isNotBlank()) y += text(s.company.trim(), bold, rx, 220f, right = true)
+        for (line in listOf(s.companyAddress, s.companyContact)) {
+            if (line.isNotBlank()) y += text(line.trim(), gray, rx, 220f, right = true)
+        }
+        y = maxOf(y + 2f, top + 28f)
+        y += text(ctx.getString(R.string.date) + ": " + Fmt.date(System.currentTimeMillis()), gray, rx, 220f, right = true)
+        y = maxOf(y, top + 44f) + 16f
         header()
 
         list.items.forEachIndexed { i, it ->

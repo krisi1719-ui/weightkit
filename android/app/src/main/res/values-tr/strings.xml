@@ -85,6 +85,10 @@
     <string name="imperial">İnç (in, ft, lb)</string>
     <string name="currency">Para birimi simgesi</string>
     <string name="company">Firma adı (PDF için)</string>
+    <string name="company_pdf">Firma bilgileri (PDF için)</string>
+    <string name="company_name">Firma adı</string>
+    <string name="company_address">Adres</string>
+    <string name="company_contact">Telefon / e-posta / Vergi No</string>
     <string name="theme">Görünüm</string>
     <string name="theme_system">Sistem</string>
     <string name="theme_light">Açık</string>

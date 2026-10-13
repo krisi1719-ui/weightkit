@@ -84,6 +84,10 @@
 "imperial" = "Имперски (in, ft, lb)";
 "currency" = "Символ на валутата";
 "company" = "Име на фирмата (за PDF)";
+"company_pdf" = "Фирма (за PDF)";
+"company_name" = "Име на фирмата";
+"company_address" = "Адрес";
+"company_contact" = "Телефон / e-mail / ЕИК";
 "theme" = "Изглед";
 "theme_system" = "Системен";
 "theme_light" = "Светъл";

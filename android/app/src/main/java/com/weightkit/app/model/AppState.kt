@@ -77,11 +77,14 @@ class AppState(ctx: Context) {
     )
         private set
     var currency by mutableStateOf(
-        prefs.getString("currency", null)
-            ?: runCatching { Currency.getInstance(Locale.getDefault()).symbol }.getOrDefault("€")
+        prefs.getString("currency", null) ?: defaultCurrency(Locale.getDefault())
     )
         private set
     var company by mutableStateOf(prefs.getString("company", "") ?: "")
+        private set
+    var companyAddress by mutableStateOf(prefs.getString("companyAddress", "") ?: "")
+        private set
+    var companyContact by mutableStateOf(prefs.getString("companyContact", "") ?: "")
         private set
     /** 0 = system, 1 = light, 2 = dark */
     var theme by mutableIntStateOf(prefs.getInt("theme", 0))
@@ -134,6 +137,8 @@ class AppState(ctx: Context) {
 
     fun updateCurrency(v: String) { currency = v; prefs.edit { putString("currency", v) } }
     fun updateCompany(v: String) { company = v; prefs.edit { putString("company", v) } }
+    fun updateCompanyAddress(v: String) { companyAddress = v; prefs.edit { putString("companyAddress", v) } }
+    fun updateCompanyContact(v: String) { companyContact = v; prefs.edit { putString("companyContact", v) } }
     fun updateTheme(v: Int) { theme = v; prefs.edit { putInt("theme", v) } }
 
     fun addCustomMaterial(name: String, density: Double) {
@@ -205,4 +210,16 @@ object AppHolder {
     fun get(ctx: Context): AppState = state ?: synchronized(this) {
         state ?: AppState(ctx.applicationContext).also { state = it }
     }
+}
+
+/**
+ * Currency symbol for a new install. Bulgaria uses the euro since 1 Jan 2026, but older
+ * Android locale data still reports BGN ("лв."), so BGN maps to "€".
+ */
+fun defaultCurrency(locale: Locale): String {
+    if (locale.country == "BG" || (locale.country.isEmpty() && locale.language == "bg")) return "€"
+    return runCatching {
+        val c = Currency.getInstance(locale)
+        if (c.currencyCode == "BGN") "€" else c.getSymbol(locale)
+    }.getOrDefault("€")
 }

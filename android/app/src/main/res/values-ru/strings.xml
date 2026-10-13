@@ -85,6 +85,10 @@
     <string name="imperial">Дюймовые (in, ft, lb)</string>
     <string name="currency">Символ валюты</string>
     <string name="company">Название компании (для PDF)</string>
+    <string name="company_pdf">Компания (для PDF)</string>
+    <string name="company_name">Название компании</string>
+    <string name="company_address">Адрес</string>
+    <string name="company_contact">Телефон / e-mail / ИНН</string>
     <string name="theme">Оформление</string>
     <string name="theme_system">Системное</string>
     <string name="theme_light">Светлое</string>

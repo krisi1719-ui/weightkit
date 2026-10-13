@@ -84,6 +84,10 @@
 "imperial" = "Дюймовые (in, ft, lb)";
 "currency" = "Символ валюты";
 "company" = "Название компании (для PDF)";
+"company_pdf" = "Компания (для PDF)";
+"company_name" = "Название компании";
+"company_address" = "Адрес";
+"company_contact" = "Телефон / e-mail / ИНН";
 "theme" = "Оформление";
 "theme_system" = "Системное";
 "theme_light" = "Светлое";

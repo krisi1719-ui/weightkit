@@ -84,6 +84,10 @@
 "imperial" = "İnç (in, ft, lb)";
 "currency" = "Para birimi simgesi";
 "company" = "Firma adı (PDF için)";
+"company_pdf" = "Firma bilgileri (PDF için)";
+"company_name" = "Firma adı";
+"company_address" = "Adres";
+"company_contact" = "Telefon / e-posta / Vergi No";
 "theme" = "Görünüm";
 "theme_system" = "Sistem";
 "theme_light" = "Açık";

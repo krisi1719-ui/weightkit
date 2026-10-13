@@ -103,9 +103,15 @@ fun SettingsScreen(s: AppState, pro: ProManager) {
                 singleLine = true, modifier = Modifier.fillMaxWidth().testTag("currency"))
         }
 
-        Section(stringResource(R.string.company)) {
+        Section(stringResource(R.string.company_pdf)) {
             OutlinedTextField(s.company, { s.updateCompany(it) }, singleLine = true, modifier = Modifier.fillMaxWidth().testTag("company"),
-                label = { Text(stringResource(R.string.company)) })
+                label = { Text(stringResource(R.string.company_name)) })
+            OutlinedTextField(s.companyAddress, { s.updateCompanyAddress(it.take(120)) }, maxLines = 2,
+                modifier = Modifier.fillMaxWidth().testTag("company_address"),
+                label = { Text(stringResource(R.string.company_address)) })
+            OutlinedTextField(s.companyContact, { s.updateCompanyContact(it.take(120)) }, maxLines = 2,
+                modifier = Modifier.fillMaxWidth().testTag("company_contact"),
+                label = { Text(stringResource(R.string.company_contact)) })
         }
 
         Section(stringResource(R.string.theme)) {

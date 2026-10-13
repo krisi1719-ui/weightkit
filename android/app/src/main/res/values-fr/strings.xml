@@ -85,6 +85,10 @@
     <string name="imperial">Impérial (in, ft, lb)</string>
     <string name="currency">Symbole monétaire</string>
     <string name="company">Nom de l’entreprise (PDF)</string>
+    <string name="company_pdf">Entreprise (pour le PDF)</string>
+    <string name="company_name">Nom de l’entreprise</string>
+    <string name="company_address">Adresse</string>
+    <string name="company_contact">Téléphone / e-mail / N° TVA</string>
     <string name="theme">Apparence</string>
     <string name="theme_system">Système</string>
     <string name="theme_light">Clair</string>

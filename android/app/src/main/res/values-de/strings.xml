@@ -85,6 +85,10 @@
     <string name="imperial">Zoll (in, ft, lb)</string>
     <string name="currency">Währungssymbol</string>
     <string name="company">Firmenname (für PDF)</string>
+    <string name="company_pdf">Firmendaten (für PDF)</string>
+    <string name="company_name">Firmenname</string>
+    <string name="company_address">Adresse</string>
+    <string name="company_contact">Telefon / E-Mail / USt-IdNr.</string>
     <string name="theme">Darstellung</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Hell</string>

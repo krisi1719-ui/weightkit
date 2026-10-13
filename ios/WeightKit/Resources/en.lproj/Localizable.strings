@@ -84,6 +84,10 @@
 "imperial" = "Imperial (in, ft, lb)";
 "currency" = "Currency symbol";
 "company" = "Company name (for PDF)";
+"company_pdf" = "Company details (for PDF)";
+"company_name" = "Company name";
+"company_address" = "Address";
+"company_contact" = "Phone / e-mail / VAT No.";
 "theme" = "Appearance";
 "theme_system" = "System";
 "theme_light" = "Light";
