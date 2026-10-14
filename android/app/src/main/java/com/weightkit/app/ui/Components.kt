@@ -38,6 +38,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -196,7 +197,8 @@ fun PaywallSheet(pro: ProManager, onDismiss: () -> Unit) {
     // The sheet has its own window, where the navigation-bar inset reads 0: take it from the activity
     // so the last button ("Restore purchase") stays above the navigation bar.
     val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    ModalBottomSheet(onDismissRequest = onDismiss) {
+    // open at full content height: half-open, the bottom ("Restore purchase") sat under the navigation bar
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(
             Modifier.fillMaxWidth().testTag("paywall").verticalScroll(rememberScrollState())
                 .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 8.dp + navBottom),
