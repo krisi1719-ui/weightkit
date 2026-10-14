@@ -346,6 +346,8 @@ fun MaterialSheet(s: AppState, onDismiss: () -> Unit) {
     )
     var query by rememberSaveable { mutableStateOf("") }
     val all = s.allMaterials
+    // the sheet has its own window (inset 0 there): take the navigation-bar inset from the activity
+    val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     ModalBottomSheet(onDismissRequest = onDismiss) {
         OutlinedTextField(
             query, { query = it }, singleLine = true,
@@ -353,8 +355,7 @@ fun MaterialSheet(s: AppState, onDismiss: () -> Unit) {
             leadingIcon = { Icon(Icons.Filled.Search, null) },
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).testTag("material_search"),
         )
-        // edge-to-edge sheet: the last material scrolls clear of the navigation bar
-        val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        // the last material scrolls clear of the navigation bar
         LazyColumn(Modifier.fillMaxWidth().testTag("material_list"), contentPadding = PaddingValues(bottom = 24.dp + navBottom)) {
             for (g in groups) {
                 val mats = all.filter { it.group == g && (query.isBlank() || it.name.contains(query.trim(), ignoreCase = true)) }

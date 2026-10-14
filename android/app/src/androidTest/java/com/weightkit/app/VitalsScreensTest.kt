@@ -8,6 +8,8 @@ import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.test.platform.app.InstrumentationRegistry
@@ -27,6 +29,20 @@ import org.junit.Test
 class VitalsScreensTest : UiTestBase() {
 
     private val tag = InstrumentationRegistry.getArguments().getString("tag") ?: "device"
+    private val orient = InstrumentationRegistry.getArguments().getString("orient")
+
+    /** Rotation through UiAutomation (reliable on phones, where the settings route is ignored). */
+    private fun applyOrientation() {
+        when (orient) {
+            "landscape" -> device.setOrientationLandscape()
+            "portrait" -> device.setOrientationPortrait()
+        }
+        Thread.sleep(1500)
+    }
+
+    @org.junit.After fun resetOrientation() {
+        if (orient == "landscape" || orient == "portrait") runCatching { device.setOrientationNatural(); device.unfreezeRotation() }
+    }
     private val report = StringBuilder()
     private var n = 0
     private var part = "a"
@@ -101,6 +117,7 @@ class VitalsScreensTest : UiTestBase() {
 
     @Test fun walkAllScreens() {
         report.append("== $tag (trial user, en-GB, light)\n")
+        applyOrientation()
         launch()
         check("calculator_top")
         scrollTo("add_to_list"); check("calculator_bottom")
@@ -108,6 +125,9 @@ class VitalsScreensTest : UiTestBase() {
         tap("shape_plate"); node("field_t").performClick(); Thread.sleep(1200); check("calculator_keyboard")
         device.pressBack(); compose.waitForIdle()
         scrollTo("material_row"); tap("material_row"); waitFor("material_list"); check("material_sheet")
+        // scroll the material list to its end: the last item must sit above the navigation bar
+        repeat(8) { node("material_list").performTouchInput { swipeUp() }; compose.waitForIdle() }
+        check("material_sheet_end")
         device.pressBack(); compose.waitForIdle()
 
         tab("lists"); check("lists_empty")
@@ -134,6 +154,7 @@ class VitalsScreensTest : UiTestBase() {
     @Test fun walkAfterTrialWithAds() {
         part = "b"
         report.append("== $tag (after trial, ads)\n")
+        applyOrientation()
         launch(days = 20.0)
         val ads = AdsHolder.get(ctx, ProHolder.get(ctx, 0))
         runCatching {

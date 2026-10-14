@@ -128,14 +128,15 @@ rotate() { # 0 portrait (natural) | 1 = 90°
   sleep 4
 }
 OUT=android/app/build/outputs/connected_android_test_additional_output
-run() { # tag
+run() { # tag [landscape|portrait]
   log "run $1"
   $ADB uninstall com.weightkit.app >/dev/null 2>&1
   $ADB install -r android/app/build/outputs/apk/debug/app-debug.apk >> $LOG 2>&1
   rm -rf "$OUT"
   ( cd android && ./gradlew connectedDebugAndroidTest \
       -Pandroid.testInstrumentationRunnerArguments.class=com.weightkit.app.VitalsScreensTest \
-      -Pandroid.testInstrumentationRunnerArguments.tag=$1 > ../build-logs/vitals-$1.log 2>&1 )
+      -Pandroid.testInstrumentationRunnerArguments.tag=$1 \
+      -Pandroid.testInstrumentationRunnerArguments.orient=${2:-none} > ../build-logs/vitals-$1.log 2>&1 )
   log "  exit $? ($(grep -E 'tests completed|BUILD' build-logs/vitals-$1.log | tr '\n' ' '))"
   mkdir -p build-logs/vitals/$1
   find "$OUT" -path "*vitals/$1/*" -type f -exec cp {} build-logs/vitals/$1/ \;
@@ -148,7 +149,7 @@ for avd in $PHONES; do
   boot $avd || continue
   rotate 0
   nav gestural;    run ${avd}_gesture
-  rotate 1;        run ${avd}_landscape; rotate 0
+  run ${avd}_landscape landscape
   nav threebutton; run ${avd}_3button
 done
 if boot wk_tablet_36; then
