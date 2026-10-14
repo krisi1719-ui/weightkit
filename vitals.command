@@ -13,6 +13,7 @@ ADB=$SDK/platform-tools/adb
 EMU=$SDK/emulator/emulator
 log() { echo "$(date +%H:%M:%S) $*" | tee -a $LOG; }
 
+caffeinate -dimsu -w $$ &   # keep the Mac awake while this runs
 log "disk: $(df -h ~ | tail -1)"
 # ---------------------------------------------------------------- 1. code search (ours vs libraries)
 log "== code search"
