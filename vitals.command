@@ -145,8 +145,8 @@ run() { # tag [landscape|portrait]
 }
 
 PHONES="wk_pixel_35 wk_pixel_36"; [ "$ONLY" = 36 ] && PHONES=wk_pixel_36
-if [ "$ONLY" = land ]; then # phone landscape only
-  boot wk_pixel_36 && { rotate 0; nav gestural; run wk_pixel_36_landscape landscape; nav threebutton; run wk_pixel_36_landscape_3button landscape; }
+if [ "$ONLY" = land ]; then # phone: landscape (gesture, 3-button) + 3-button portrait
+  boot wk_pixel_36 && { rotate 0; nav gestural; run wk_pixel_36_landscape landscape; nav threebutton; run wk_pixel_36_3button portrait; run wk_pixel_36_landscape_3button landscape; }
   kill_emus; log "VITALS DONE"; exit 0
 fi
 for avd in $PHONES; do
