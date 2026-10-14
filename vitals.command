@@ -138,13 +138,17 @@ run() { # tag [landscape|portrait]
       -Pandroid.testInstrumentationRunnerArguments.tag=$1 \
       -Pandroid.testInstrumentationRunnerArguments.orient=${2:-none} > ../build-logs/vitals-$1.log 2>&1 )
   log "  exit $? ($(grep -E 'tests completed|BUILD' build-logs/vitals-$1.log | tr '\n' ' '))"
-  mkdir -p build-logs/vitals/$1
+  rm -rf build-logs/vitals/$1 2>/dev/null; mkdir -p build-logs/vitals/$1
   find "$OUT" -path "*vitals/$1/*" -type f -exec cp {} build-logs/vitals/$1/ \;
   $ADB shell screencap -p /sdcard/last.png && $ADB pull /sdcard/last.png build-logs/vitals/$1/zz_last_screen.png >/dev/null 2>&1
   cat build-logs/vitals/$1/report_*.txt >> $LOG 2>/dev/null
 }
 
 PHONES="wk_pixel_35 wk_pixel_36"; [ "$ONLY" = 36 ] && PHONES=wk_pixel_36
+if [ "$ONLY" = land ]; then # phone landscape only
+  boot wk_pixel_36 && { rotate 0; nav gestural; run wk_pixel_36_landscape landscape; nav threebutton; run wk_pixel_36_landscape_3button landscape; }
+  kill_emus; log "VITALS DONE"; exit 0
+fi
 for avd in $PHONES; do
   boot $avd || continue
   rotate 0

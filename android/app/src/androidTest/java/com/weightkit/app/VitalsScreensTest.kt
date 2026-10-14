@@ -123,7 +123,8 @@ class VitalsScreensTest : UiTestBase() {
         scrollTo("add_to_list"); check("calculator_bottom")
         // keyboard open on a field
         tap("shape_plate"); node("field_t").performClick(); Thread.sleep(1200); check("calculator_keyboard")
-        device.pressBack(); compose.waitForIdle()
+        // close only the keyboard (a plain Back would leave the app when no keyboard is shown)
+        androidx.test.espresso.Espresso.closeSoftKeyboard(); compose.waitForIdle()
         scrollTo("material_row"); tap("material_row"); waitFor("material_list"); check("material_sheet")
         // scroll the material list to its end: the last item must sit above the navigation bar
         repeat(8) { node("material_list").performTouchInput { swipeUp() }; compose.waitForIdle() }
