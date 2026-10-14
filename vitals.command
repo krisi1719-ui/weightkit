@@ -148,6 +148,7 @@ for avd in $PHONES; do
   boot $avd || continue
   rotate 0
   nav gestural;    run ${avd}_gesture
+  rotate 1;        run ${avd}_landscape; rotate 0
   nav threebutton; run ${avd}_3button
 done
 if boot wk_tablet_36; then

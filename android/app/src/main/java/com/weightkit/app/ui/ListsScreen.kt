@@ -60,8 +60,8 @@ import com.weightkit.app.model.ProManager
 @Composable
 fun ListsScreen(s: AppState, pro: ProManager) {
     var openId by rememberSaveable { mutableStateOf<String?>(null) }
-    var showNew by remember { mutableStateOf(false) }
-    var showPaywall by remember { mutableStateOf(false) }
+    var showNew by rememberSaveable { mutableStateOf(false) }
+    var showPaywall by rememberSaveable { mutableStateOf(false) }
 
     val open = s.lists.firstOrNull { it.id == openId }
     if (open != null) {
@@ -102,7 +102,7 @@ fun ListsScreen(s: AppState, pro: ProManager) {
     }
 
     if (showNew) {
-        var name by remember { mutableStateOf("") }
+        var name by rememberSaveable { mutableStateOf("") }
         val def = stringResource(R.string.default_list)
         AlertDialog(
             onDismissRequest = { showNew = false },
@@ -125,8 +125,8 @@ fun ListsScreen(s: AppState, pro: ProManager) {
 @Composable
 private fun ListDetail(s: AppState, pro: ProManager, list: CutList, onBack: () -> Unit) {
     val ctx = LocalContext.current
-    var showPaywall by remember { mutableStateOf(false) }
-    var confirmDelete by remember { mutableStateOf(false) }
+    var showPaywall by rememberSaveable { mutableStateOf(false) }
+    var confirmDelete by rememberSaveable { mutableStateOf(false) }
     val u = s.units
 
     fun export(pdf: Boolean) {

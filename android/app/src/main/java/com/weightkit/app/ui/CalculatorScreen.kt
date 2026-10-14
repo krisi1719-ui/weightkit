@@ -7,6 +7,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,6 +47,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,8 +85,8 @@ fun CalculatorScreen(s: AppState, pro: ProManager) {
     s.calc.proAllowed = pro.hasPro // Pro tables only with Pro (trial / reward / purchase)
     val material = s.material(s.materialId)
     val outcome = s.compute(material.density)
-    var showPaywall by remember { mutableStateOf(false) }
-    var showMaterials by remember { mutableStateOf(false) }
+    var showPaywall by rememberSaveable { mutableStateOf(false) }
+    var showMaterials by rememberSaveable { mutableStateOf(false) }
     val defaultList = stringResource(R.string.default_list)
     val shapeTitle = stringResource(s.shape.titleRes)
 
@@ -339,7 +344,7 @@ fun MaterialSheet(s: AppState, onDismiss: () -> Unit) {
         "aluminium" to R.string.group_aluminium, "copper" to R.string.group_copper,
         "other" to R.string.group_other, "plastic" to R.string.group_plastic, "custom" to R.string.group_custom,
     )
-    var query by remember { mutableStateOf("") }
+    var query by rememberSaveable { mutableStateOf("") }
     val all = s.allMaterials
     ModalBottomSheet(onDismissRequest = onDismiss) {
         OutlinedTextField(
@@ -348,7 +353,9 @@ fun MaterialSheet(s: AppState, onDismiss: () -> Unit) {
             leadingIcon = { Icon(Icons.Filled.Search, null) },
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).testTag("material_search"),
         )
-        LazyColumn(Modifier.fillMaxWidth().padding(bottom = 24.dp).testTag("material_list")) {
+        // edge-to-edge sheet: the last material scrolls clear of the navigation bar
+        val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        LazyColumn(Modifier.fillMaxWidth().testTag("material_list"), contentPadding = PaddingValues(bottom = 24.dp + navBottom)) {
             for (g in groups) {
                 val mats = all.filter { it.group == g && (query.isBlank() || it.name.contains(query.trim(), ignoreCase = true)) }
                 if (mats.isEmpty()) continue

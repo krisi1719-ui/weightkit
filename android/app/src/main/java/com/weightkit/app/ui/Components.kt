@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -192,7 +193,9 @@ fun PaywallSheet(pro: ProManager, onDismiss: () -> Unit) {
     val activity = LocalContext.current.findActivity()
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(
-            Modifier.fillMaxWidth().testTag("paywall").verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 8.dp),
+            // edge-to-edge sheet: keep the last button ("Restore purchase") above the navigation bar
+            Modifier.fillMaxWidth().testTag("paywall").verticalScroll(rememberScrollState()).navigationBarsPadding()
+                .padding(horizontal = 24.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {

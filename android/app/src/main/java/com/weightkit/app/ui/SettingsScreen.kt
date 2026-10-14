@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,8 +59,8 @@ import com.weightkit.app.model.UnitSystem
 
 @Composable
 fun SettingsScreen(s: AppState, pro: ProManager) {
-    var showPaywall by remember { mutableStateOf(false) }
-    var showAdd by remember { mutableStateOf(false) }
+    var showPaywall by rememberSaveable { mutableStateOf(false) }
+    var showAdd by rememberSaveable { mutableStateOf(false) }
 
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
@@ -177,8 +178,8 @@ fun SettingsScreen(s: AppState, pro: ProManager) {
     }
 
     if (showAdd) {
-        var name by remember { mutableStateOf("") }
-        var dens by remember { mutableStateOf("") }
+        var name by rememberSaveable { mutableStateOf("") }
+        var dens by rememberSaveable { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showAdd = false },
             title = { Text(stringResource(R.string.add_material)) },

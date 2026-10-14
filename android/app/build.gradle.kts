@@ -17,8 +17,8 @@ android {
         applicationId = "com.weightkit.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 7
-        versionName = "1.0.6"
+        versionCode = 8
+        versionName = "1.0.7"
         // AdMob app ID: real WeightKit (Android) app in release, Google's test app ID in debug (see buildTypes).
         manifestPlaceholders["admobAppId"] = "ca-app-pub-4705847427752554~3826175222"
 
