@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -51,6 +52,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
@@ -103,8 +105,10 @@ fun CalculatorScreen(s: AppState, pro: ProManager) {
             }
         }
 
-        Column(
-            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp),
+        // low screens (phone in landscape): inputs and result side by side instead of stacked
+        val compact = LocalConfiguration.current.screenHeightDp < 480
+        val form: @Composable (Modifier) -> Unit = { m -> Column(
+            m.verticalScroll(rememberScrollState()).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             ShapeChips(s.shape) { s.shape = it }
@@ -167,9 +171,19 @@ fun CalculatorScreen(s: AppState, pro: ProManager) {
                 Spacer(Modifier.width(8.dp))
                 Text(stringResource(R.string.add_to_list), style = MaterialTheme.typography.titleMedium)
             }
-        }
+        } }
 
-        ResultCard(outcome, units, s.pricePerKg, s.currency, s.quantity)
+        if (compact) {
+            Row(Modifier.weight(1f)) {
+                form(Modifier.weight(1.4f).fillMaxHeight())
+                Column(Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState())) {
+                    ResultCard(outcome, units, s.pricePerKg, s.currency, s.quantity)
+                }
+            }
+        } else {
+            form(Modifier.weight(1f))
+            ResultCard(outcome, units, s.pricePerKg, s.currency, s.quantity)
+        }
     }
 
     if (showPaywall) PaywallSheet(pro) { showPaywall = false }
