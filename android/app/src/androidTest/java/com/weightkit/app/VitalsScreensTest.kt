@@ -124,7 +124,11 @@ class VitalsScreensTest : UiTestBase() {
         // keyboard open on a field
         tap("shape_plate"); node("field_t").performClick(); Thread.sleep(1200); check("calculator_keyboard")
         // close only the keyboard (a plain Back would leave the app when no keyboard is shown)
-        androidx.test.espresso.Espresso.closeSoftKeyboard(); compose.waitForIdle()
+        val act = resumedActivity()
+        val imeShown = act?.window?.decorView?.let { ViewCompat.getRootWindowInsets(it)?.isVisible(WindowInsetsCompat.Type.ime()) } == true
+        // landscape: the keyboard is full screen (our window loses focus) – Back closes it there too
+        if (imeShown || act?.hasWindowFocus() == false) { device.pressBack(); Thread.sleep(800) }
+        compose.waitForIdle()
         scrollTo("material_row"); tap("material_row"); waitFor("material_list"); check("material_sheet")
         // scroll the material list to its end: the last item must sit above the navigation bar
         repeat(8) { node("material_list").performTouchInput { swipeUp() }; compose.waitForIdle() }
