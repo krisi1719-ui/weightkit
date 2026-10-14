@@ -5,7 +5,7 @@
 cd "$(dirname "$0")"
 mkdir -p build-logs/vitals
 LOG=$PWD/build-logs/vitals.log
-: > $LOG
+: >> $LOG
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 SDK=~/Library/Android/sdk
 export ANDROID_HOME=$SDK ANDROID_SDK_ROOT=$SDK
@@ -14,8 +14,10 @@ EMU=$SDK/emulator/emulator
 log() { echo "$(date +%H:%M:%S) $*" | tee -a $LOG; }
 
 caffeinate -dimsu -w $$ &   # keep the Mac awake while this runs
+ONLY=$1
 log "disk: $(df -h ~ | tail -1)"
 # ---------------------------------------------------------------- 1. code search (ours vs libraries)
+if [ -z "$ONLY" ]; then
 log "== code search"
 (
   cd android
@@ -66,6 +68,7 @@ with open(log, "a") as fh:
         for h in hits[:6]: fh.write(f"        {h}\n")
 P
 
+fi
 # ---------------------------------------------------------------- 2. emulators
 SDKM=$SDK/cmdline-tools/latest/bin/sdkmanager
 if [ ! -x "$SDKM" ]; then
@@ -76,15 +79,21 @@ if [ ! -x "$SDKM" ]; then
 fi
 AVDM=$SDK/cmdline-tools/latest/bin/avdmanager
 ARCH=$( [ "$(uname -m)" = "arm64" ] && echo arm64-v8a || echo x86_64 )
+# use an installed image (google_apis or google_apis_playstore); download google_apis only if neither exists
+img() {
+  for v in google_apis google_apis_playstore; do
+    [ -f "$SDK/system-images/android-$1/$v/$ARCH/package.xml" ] && { echo "system-images;android-$1;$v;$ARCH"; return; }
+  done
+}
 for api in 35 36; do
-  IMG="system-images;android-$api;google_apis;$ARCH"
-  [ -d "$SDK/system-images/android-$api/google_apis/$ARCH" ] || { log "downloading $IMG"; yes | $SDKM --install "$IMG" >> $LOG 2>&1; }
+  [ -n "$(img $api)" ] || { log "downloading android-$api"; yes | $SDKM --install "system-images;android-$api;google_apis;$ARCH" >> $LOG 2>&1; }
+  log "API $api image: $(img $api)"
 done
 yes | $SDKM --licenses > /dev/null 2>&1
 mk() { # name api device
   $AVDM list avd -c 2>/dev/null | grep -qx "$1" && return
   log "creating AVD $1"
-  echo no | $AVDM create avd -n "$1" -k "system-images;android-$2;google_apis;$ARCH" -d "$3" >> $LOG 2>&1
+  echo no | $AVDM create avd -n "$1" -k "$(img $2)" -d "$3" >> $LOG 2>&1
 }
 mk wk_pixel_35 35 pixel_8
 mk wk_pixel_36 36 pixel_8
@@ -134,7 +143,8 @@ run() { # tag
   cat build-logs/vitals/$1/report_*.txt >> $LOG 2>/dev/null
 }
 
-for avd in wk_pixel_35 wk_pixel_36; do
+PHONES="wk_pixel_35 wk_pixel_36"; [ "$ONLY" = 36 ] && PHONES=wk_pixel_36
+for avd in $PHONES; do
   boot $avd || continue
   rotate 0
   nav gestural;    run ${avd}_gesture
