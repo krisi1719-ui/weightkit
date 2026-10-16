@@ -81,6 +81,17 @@ ver = next(v for v in versions if v["attributes"]["appStoreState"] in
 vid = ver["id"]
 print("Version", ver["attributes"]["versionString"], ver["attributes"]["appStoreState"])
 
+# ---------------------------------------------------------------- version string = MARKETING_VERSION of the Xcode project
+if "version" in STEPS:
+    import re
+    mv = re.search(r"MARKETING_VERSION = ([0-9.]+);", open(os.path.join(ROOT, "ios", "WeightKit.xcodeproj", "project.pbxproj")).read()).group(1)
+    if ver["attributes"]["versionString"] != mv:
+        r = call("PATCH", f"/v1/appStoreVersions/{vid}", {"data": {"type": "appStoreVersions", "id": vid,
+                 "attributes": {"versionString": mv}}}, soft=True)
+        if r is not None:
+            ver = r["data"]
+    print("Version string:", ver["attributes"]["versionString"])
+
 if "meta" in STEPS:
     call("PATCH", f"/v1/apps/{APP}", {"data": {"type": "apps", "id": APP,
          "attributes": {"contentRightsDeclaration": "DOES_NOT_USE_THIRD_PARTY_CONTENT"}}}, soft=True)
@@ -201,7 +212,7 @@ if "iaps" in STEPS:
             iap = call("POST", "/v2/inAppPurchases", {"data": {"type": "inAppPurchases", "attributes": {
                        "name": spec["ref"], "productId": pid, "inAppPurchaseType": "NON_CONSUMABLE",
                        "familySharable": False, "reviewNote": "Settings > WeightKit Pro. " + (
-                           "Free (price tier 0): starts the 14-day trial of all Pro features (guideline 3.1.1)."
+                           "Free (price tier 0): starts the 7-day trial of all Pro features (guideline 3.1.1)."
                            if "trial" in pid else "One-time unlock of all Pro features; removes ads.")},
                        "relationships": {"app": {"data": {"type": "apps", "id": APP}}}}}, soft=True)
             if iap is None:
@@ -209,6 +220,9 @@ if "iaps" in STEPS:
             iap = iap["data"]
         iid = iap["id"]
         print("IAP", pid, iid, iap["attributes"].get("state"))
+        call("PATCH", f"/v2/inAppPurchases/{iid}", {"data": {"type": "inAppPurchases", "id": iid, "attributes": {
+             "reviewNote": "Settings > WeightKit Pro. " + ("Free (price tier 0): starts the 7-day trial of all Pro features (guideline 3.1.1)."
+                           if "trial" in pid else "One-time unlock of all Pro features; removes ads.")}}}, soft=True)
         locs = {l["attributes"]["locale"]: l for l in get_all(f"/v2/inAppPurchases/{iid}/inAppPurchaseLocalizations")}
         for loc, t in spec["loc"].items():
             if loc in locs:
