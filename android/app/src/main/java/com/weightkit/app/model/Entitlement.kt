@@ -40,7 +40,7 @@ class PrefsStore(private val prefs: SharedPreferences) : KeyValueStore {
  * Pro state without any store/billing code, so it can be unit-tested with a fake clock.
  * Identical rules on iOS (Entitlement.swift).
  *
- *  • Trial: 14 × 24 h from the earliest known install time.
+ *  • Trial: 7 × 24 h from the earliest known install time.
  *  • Reward: exactly 24 h from the moment it is granted.
  *  • Purchased overrides trial and reward; a refund/revocation (purchased = false) removes it.
  *  • Clock rollback: [now] never goes below the latest time seen, and while the wall clock is
@@ -54,7 +54,7 @@ class Entitlement(
     installTime: Long,
 ) {
     companion object {
-        const val TRIAL_DAYS = 14
+        const val TRIAL_DAYS = 7
         const val REWARD_HOURS = 24
         const val TRIAL_MS = TRIAL_DAYS * 24L * 3600 * 1000
         const val REWARD_MS = REWARD_HOURS * 3600L * 1000

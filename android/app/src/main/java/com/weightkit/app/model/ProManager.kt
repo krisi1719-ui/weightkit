@@ -23,7 +23,7 @@ import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 
 /**
- * One-time "Pro" in-app product (non-consumable, never consumed) + 14-day free trial
+ * One-time "Pro" in-app product (non-consumable, never consumed) + 7-day free trial
  * + 24 h Pro from a rewarded ad. Create a one-time product with this ID in Play Console.
  *
  * apps-api (shared GGSHOP server, see AppsApiClient.kt / CLIENT.md) is the source of truth:

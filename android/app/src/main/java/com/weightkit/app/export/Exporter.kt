@@ -30,6 +30,20 @@ object Exporter {
         ctx.startActivity(Intent.createChooser(send, list.name))
     }
 
+    /** All lists + company details + logo as one JSON file, shared like a PDF (e-mail, Drive, …). */
+    fun shareBackup(ctx: Context, s: AppState) {
+        val f = file(ctx, "WeightKit-backup-" + java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date()), "json")
+        f.writeText(s.backupJson(), Charsets.UTF_8)
+        val uri = FileProvider.getUriForFile(ctx, ctx.packageName + ".fileprovider", f)
+        val send = Intent(Intent.ACTION_SEND).apply {
+            type = "application/json"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_SUBJECT, f.name)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        ctx.startActivity(Intent.createChooser(send, f.name))
+    }
+
     private fun file(ctx: Context, name: String, ext: String): File {
         val dir = File(ctx.cacheDir, "exports").apply { mkdirs() }
         val safe = name.replace(Regex("[/\\\\:?*\"<>|]"), "_").ifBlank { "list" }
@@ -46,6 +60,7 @@ object Exporter {
             totalWeight = ctx.getString(R.string.total_weight), cost = ctx.getString(R.string.cost),
             waste = ctx.getString(R.string.waste), markup = ctx.getString(R.string.markup),
             total = ctx.getString(R.string.total),
+            vat = ctx.getString(R.string.vat), totalWithVat = ctx.getString(R.string.total_with_vat),
         )
         return file(ctx, list.name, "csv").apply { writeText(CsvWriter.text(list, s.units, s.currency, labels), Charsets.UTF_8) }
     }
@@ -107,11 +122,28 @@ object Exporter {
 
         newPage()
         val top = y
-        fill.color = accent
-        page!!.canvas.drawRect(margin, top, margin + 6, top + 44, fill)
-        text(ctx.getString(R.string.pdf_title), title, margin + 14, 300f)
+        // logo (Pro) at the top left instead of the accent bar
+        val logo = if (s.hasLogo) runCatching { android.graphics.BitmapFactory.decodeFile(s.logoFile.path) }.getOrNull() else null
+        var tx = margin + 14
+        if (logo != null) {
+            val h = 48f
+            val w = (logo.width * h / logo.height).coerceAtMost(140f)
+            val hh = logo.height * w / logo.width
+            page!!.canvas.drawBitmap(logo, null, android.graphics.RectF(margin, top, margin + w, top + hh),
+                Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG))
+            tx = margin + w + 12
+        } else {
+            fill.color = accent
+            page!!.canvas.drawRect(margin, top, margin + 6, top + 44, fill)
+        }
+        val isQuote = list.client.isNotBlank() || list.quoteNo.isNotBlank() || list.validDays > 0 || list.vatPct > 0
+        val heading = if (isQuote) ctx.getString(R.string.quote_title) + (if (list.quoteNo.isNotBlank()) " № " + list.quoteNo.trim() else "")
+            else ctx.getString(R.string.pdf_title)
+        text(heading, title, tx, 300f)
         y = top + 28f
-        text(list.name, gray, margin + 14, 300f)
+        y += text(list.name, gray, tx, 300f)
+        if (list.client.isNotBlank()) y += text(ctx.getString(R.string.client) + ": " + list.client.trim(), bold, tx, 300f)
+        val leftEnd = y
         // right column: company name, address, contact, then the date
         val rx = pageW - margin - 220
         y = top
@@ -120,8 +152,11 @@ object Exporter {
             if (line.isNotBlank()) y += text(line.trim(), gray, rx, 220f, right = true)
         }
         y = maxOf(y + 2f, top + 28f)
-        y += text(ctx.getString(R.string.date) + ": " + Fmt.date(System.currentTimeMillis()), gray, rx, 220f, right = true)
-        y = maxOf(y, top + 44f) + 16f
+        val today = System.currentTimeMillis()
+        y += text(ctx.getString(R.string.date) + ": " + Fmt.date(today), gray, rx, 220f, right = true)
+        if (list.validDays > 0)
+            y += text(ctx.getString(R.string.valid_until) + ": " + Fmt.date(today + list.validDays * 24L * 3600 * 1000), gray, rx, 220f, right = true)
+        y = maxOf(y, top + 44f, leftEnd) + 16f
         header()
 
         list.items.forEachIndexed { i, it ->
@@ -155,7 +190,20 @@ object Exporter {
         if (list.hasCost) {
             total(ctx.getString(R.string.subtotal), Fmt.money(list.netCost, s.currency), body)
             total(ctx.getString(R.string.markup), Fmt.fixed(list.markupPct, 1) + " %", body)
-            total(ctx.getString(R.string.total), Fmt.money(list.totalCost, s.currency), TextPaint(bold).apply { textSize = 12f })
+            if (list.vatPct > 0) {
+                total(ctx.getString(R.string.total_ex_vat), Fmt.money(list.totalCost, s.currency), bold)
+                total(ctx.getString(R.string.vat) + " " + Fmt.fixed(list.vatPct, 1) + " %", Fmt.money(list.vat, s.currency), body)
+                total(ctx.getString(R.string.total_with_vat), Fmt.money(list.totalWithVat, s.currency), TextPaint(bold).apply { textSize = 12f })
+            } else {
+                total(ctx.getString(R.string.total), Fmt.money(list.totalCost, s.currency), TextPaint(bold).apply { textSize = 12f })
+            }
+        }
+        if (list.notes.isNotBlank()) {
+            y += 14f
+            if (y > pageH - margin - 80) newPage()
+            text(ctx.getString(R.string.notes), bold, margin, pageW - 2 * margin)
+            y += 14f
+            y += text(list.notes.trim(), body, margin, pageW - 2 * margin)
         }
         y = pageH - margin - 12
         text("WeightKit · " + ctx.getString(R.string.data_note), small, margin, pageW - 2 * margin)

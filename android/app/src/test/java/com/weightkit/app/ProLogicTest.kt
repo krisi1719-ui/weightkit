@@ -17,23 +17,23 @@ class EntitlementTest {
     private fun ent(firstLaunch: Long = install, installTime: Long = install) =
         Entitlement(store, clock, firstLaunch, installTime).also { it.touchClock() }
 
-    @Test fun trial_day0_day13_9_active_day14_ended() {
+    @Test fun trial_day0_day6_9_active_day7_ended() {
         val e = ent()
         assertTrue(e.inTrial); assertTrue(e.hasPro)
-        clock.advance((13.9 * DAY).toLong())
+        clock.advance((6.9 * DAY).toLong())
         assertTrue(e.inTrial)
         clock.advance((0.1 * DAY).toLong() - 1)
         assertTrue("1 ms before the end", e.inTrial)
         clock.advance(1)
         assertFalse(e.inTrial); assertFalse(e.hasPro)
-        assertEquals(14 * DAY, e.trialEnd - e.trialStart)
+        assertEquals(7 * DAY, e.trialEnd - e.trialStart)
     }
 
     @Test fun clockBack30Days_doesNotExtendTrial() {
         val e = ent()
-        clock.advance((13.9 * DAY).toLong()); e.touchClock()
+        clock.advance((6.9 * DAY).toLong()); e.touchClock()
         clock.wall -= 30 * DAY                       // user sets the date back
-        assertTrue("still day 13.9", e.inTrial)
+        assertTrue("still day 6.9", e.inTrial)
         clock.mono += (0.1 * DAY).toLong()           // real time passes, wall clock stays behind
         clock.wall += (0.1 * DAY).toLong()
         assertFalse(e.inTrial)

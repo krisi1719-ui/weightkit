@@ -49,6 +49,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.asImageBitmap
 import com.weightkit.app.R
 import com.weightkit.app.model.AdsHolder
 import com.weightkit.app.model.AppState
@@ -61,6 +67,13 @@ import com.weightkit.app.model.UnitSystem
 fun SettingsScreen(s: AppState, pro: ProManager) {
     var showPaywall by rememberSaveable { mutableStateOf(false) }
     var showAdd by rememberSaveable { mutableStateOf(false) }
+    val ctx = LocalContext.current
+    // logo for the PDF (Pro): the system photo picker, no storage permission needed
+    val pickLogo = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        val bytes = runCatching { ctx.contentResolver.openInputStream(uri)?.use { it.readBytes() } }.getOrNull()
+        if (bytes == null || !s.setLogo(bytes)) Toast.makeText(ctx, ctx.getString(R.string.logo_bad), Toast.LENGTH_LONG).show()
+    }
 
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
@@ -113,6 +126,10 @@ fun SettingsScreen(s: AppState, pro: ProManager) {
             OutlinedTextField(s.companyContact, { s.updateCompanyContact(it.take(120)) }, maxLines = 2,
                 modifier = Modifier.fillMaxWidth().testTag("company_contact"),
                 label = { Text(stringResource(R.string.company_contact)) })
+            LogoRow(s, pro, onPick = {
+                if (!pro.hasPro) showPaywall = true
+                else pickLogo.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            })
         }
 
         Section(stringResource(R.string.theme)) {
@@ -211,6 +228,25 @@ private fun Section(title: String, content: @Composable () -> Unit) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
             content()
+        }
+    }
+}
+
+@Composable
+private fun LogoRow(s: AppState, pro: ProManager, onPick: () -> Unit) {
+    val img = remember(s.hasLogo, s.logoFile.lastModified()) {
+        if (s.hasLogo) runCatching { android.graphics.BitmapFactory.decodeFile(s.logoFile.path)?.asImageBitmap() }.getOrNull() else null
+    }
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().testTag("logo_row")) {
+        Text(stringResource(R.string.logo), Modifier.weight(1f))
+        if (img != null) {
+            Image(img, null, Modifier.size(width = 72.dp, height = 40.dp).testTag("logo_preview"))
+            IconButton(onClick = { s.setLogo(null) }, modifier = Modifier.testTag("logo_remove")) {
+                Icon(Icons.Filled.Delete, stringResource(R.string.logo_remove))
+            }
+        } else {
+            TextButton(onClick = onPick, modifier = Modifier.testTag("logo_pick")) { Text(stringResource(R.string.logo_pick)) }
+            if (!pro.purchased) ProBadge()
         }
     }
 }

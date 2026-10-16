@@ -9,11 +9,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 import java.util.Currency
 import java.util.Locale
 import java.util.UUID
 
 data class CustomMaterial(val id: String = UUID.randomUUID().toString(), val name: String, val density: Double)
+
+/** What a typed price refers to. KG is free; per metre and per piece are Pro. */
+enum class PriceUnit { KG, M, PC }
 
 data class ListItem(
     val id: String = UUID.randomUUID().toString(),
@@ -22,11 +26,21 @@ data class ListItem(
     val size: String,
     val qty: Int,
     val pieceKg: Double,
-    /** Price per kg when added (null = no price). */
+    /** Price when added, per [priceUnit] (per kg / per metre / per piece); null = no price. */
     val pricePerKg: Double?,
+    val priceUnit: PriceUnit = PriceUnit.KG,
+    /** Length of one piece in metres (bars, tubes, profiles); null for sheets. */
+    val pieceM: Double? = null,
 ) {
     val totalKg: Double get() = pieceKg * qty
-    val cost: Double? get() = pricePerKg?.let { it * totalKg }
+    val cost: Double?
+        get() = pricePerKg?.let { p ->
+            when (priceUnit) {
+                PriceUnit.KG -> p * totalKg
+                PriceUnit.M -> pieceM?.let { p * it * qty }
+                PriceUnit.PC -> p * qty
+            }
+        }
 }
 
 data class CutList(
@@ -36,6 +50,13 @@ data class CutList(
     val wastePct: Double = 0.0,
     val markupPct: Double = 0.0,
     val items: List<ListItem> = emptyList(),
+    // ---- quote details for the PDF (Pro) ----
+    val client: String = "",
+    val quoteNo: String = "",
+    val vatPct: Double = 0.0,
+    /** Offer valid for N days from the PDF date; 0 = not shown. */
+    val validDays: Int = 0,
+    val notes: String = "",
 ) {
     val netKg: Double get() = items.sumOf { it.totalKg }
     val grossKg: Double get() = netKg * (1 + wastePct / 100)
@@ -43,6 +64,8 @@ data class CutList(
     val netCost: Double get() = items.sumOf { it.cost ?: 0.0 }
     /** Cost incl. waste and markup. */
     val totalCost: Double get() = netCost * (1 + wastePct / 100) * (1 + markupPct / 100)
+    val vat: Double get() = totalCost * vatPct / 100
+    val totalWithVat: Double get() = totalCost + vat
 }
 
 data class CalcResult(
@@ -67,6 +90,7 @@ sealed class CalcOutcome {
  * (see [AppHolder]) so it survives Activity recreation.
  */
 class AppState(ctx: Context) {
+    private val appCtx: Context = ctx.applicationContext
     private val prefs = ctx.getSharedPreferences("weightkit", Context.MODE_PRIVATE)
     val catalog = Catalog(ctx)
 
@@ -168,8 +192,10 @@ class AppState(ctx: Context) {
     val sectionItem: SectionItem? get() = calc.sectionItem
     val rebarItem: SectionItem? get() = calc.rebarItem
     val quantity: Int get() = calc.quantity
-    /** Internal price per kg, null if not entered. */
+    /** Internal price (per kg / metre / piece, see [CalcState.effectivePriceUnit]), null if not entered. */
     val pricePerKg: Double? get() = calc.pricePerKg
+    val priceUnit: PriceUnit get() = calc.effectivePriceUnit
+    fun cost(r: CalcResult): Double? = calc.cost(r)
 
     fun compute(density: Double): CalcOutcome = calc.compute(density)
 
@@ -190,6 +216,81 @@ class AppState(ctx: Context) {
     }
 
     fun newList(name: String) { lists.add(0, CutList(name = name)); saveLists() }
+
+    /** Copy of a list (new ids) at the top; returns the copy's id. */
+    fun duplicateList(id: String, copySuffix: String): String? {
+        val src = lists.firstOrNull { it.id == id } ?: return null
+        val copy = src.copy(id = UUID.randomUUID().toString(), name = "${src.name} ($copySuffix)",
+            created = System.currentTimeMillis(), items = src.items.map { it.copy(id = UUID.randomUUID().toString()) })
+        lists.add(0, copy); saveLists()
+        return copy.id
+    }
+
+    // ---------------------------------------------------------------- logo + backup
+
+    val logoFile: File = File(appCtx.filesDir, "logo.png")
+    var hasLogo by mutableStateOf(logoFile.exists())
+        private set
+
+    /** Saves the picked image as the PDF logo (scaled to at most 600 px). False if it is not an image. */
+    fun setLogo(png: ByteArray?): Boolean {
+        if (png == null) { logoFile.delete(); hasLogo = false; return true }
+        // decode at a reduced size first (a 12 MP photo would otherwise need ~48 MB)
+        val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        android.graphics.BitmapFactory.decodeByteArray(png, 0, png.size, bounds)
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return false
+        var sample = 1
+        while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= 600) sample *= 2
+        val bmp = android.graphics.BitmapFactory.decodeByteArray(png, 0, png.size,
+            android.graphics.BitmapFactory.Options().apply { inSampleSize = sample }) ?: return false
+        val scale = minOf(1.0, 600.0 / maxOf(bmp.width, bmp.height))
+        val out = if (scale < 1) android.graphics.Bitmap.createScaledBitmap(bmp, (bmp.width * scale).toInt().coerceAtLeast(1),
+            (bmp.height * scale).toInt().coerceAtLeast(1), true) else bmp
+        logoFile.outputStream().use { out.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+        hasLogo = true
+        return true
+    }
+
+    /** Everything a user would miss on a new phone: lists, company details, logo, own materials. */
+    fun backupJson(): String {
+        val o = JSONObject().put("format", "weightkit-backup").put("version", 1)
+            .put("lists", JSONArray(ListCodec.encode(lists)))
+            .put("company", company).put("companyAddress", companyAddress).put("companyContact", companyContact)
+            .put("currency", currency)
+            .put("customMaterials", JSONArray().apply {
+                customMaterials.forEach { put(JSONObject().put("id", it.id).put("name", it.name).put("density", it.density)) }
+            })
+        if (logoFile.exists()) o.put("logoPng", android.util.Base64.encodeToString(logoFile.readBytes(), android.util.Base64.NO_WRAP))
+        return o.toString()
+    }
+
+    /**
+     * Restores a [backupJson] file: lists are added (a list that is already here is skipped), own
+     * materials are merged, company details and logo are taken only where they are empty here.
+     * Returns the number of lists added, or null if the file is not a WeightKit backup.
+     */
+    fun restoreBackup(json: String): Int? {
+        val o = runCatching { JSONObject(json) }.getOrNull() ?: return null
+        if (o.optString("format") != "weightkit-backup") return null
+        val have = lists.map { it.id }.toSet()
+        val add = ListCodec.decode(o.optJSONArray("lists")?.toString() ?: "[]").filter { it.id !in have }
+        lists.addAll(0, add); saveLists()
+        o.optJSONArray("customMaterials")?.let { a ->
+            for (i in 0 until a.length()) runCatching {
+                val m = a.getJSONObject(i)
+                if (customMaterials.none { it.id == m.getString("id") })
+                    customMaterials.add(CustomMaterial(m.getString("id"), m.getString("name"), m.getDouble("density")))
+            }
+            saveCustomMaterials()
+        }
+        if (company.isBlank()) updateCompany(o.optString("company"))
+        if (companyAddress.isBlank()) updateCompanyAddress(o.optString("companyAddress"))
+        if (companyContact.isBlank()) updateCompanyContact(o.optString("companyContact"))
+        if (!hasLogo) o.optString("logoPng").takeIf { it.isNotEmpty() }?.let {
+            runCatching { setLogo(android.util.Base64.decode(it, android.util.Base64.NO_WRAP)) }
+        }
+        return add.size
+    }
     fun deleteList(id: String) { lists.removeAll { it.id == id }; saveLists() }
 
     fun updateList(id: String, f: (CutList) -> CutList) {

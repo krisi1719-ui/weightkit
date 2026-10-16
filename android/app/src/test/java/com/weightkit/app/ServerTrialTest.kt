@@ -83,7 +83,7 @@ class ServerTrialTest {
     @Test fun noServerAnswer_usesLocalTrial() {
         val e = ent()
         assertFalse(e.hasServerTrial)
-        assertEquals(14 * DAY, e.trialEnd - e.trialStart)
+        assertEquals(7 * DAY, e.trialEnd - e.trialStart)
         assertTrue(e.inTrial)
     }
 }

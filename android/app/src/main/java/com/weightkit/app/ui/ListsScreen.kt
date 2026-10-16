@@ -3,6 +3,12 @@
 package com.weightkit.app.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material.icons.filled.MoreVert
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,9 +69,20 @@ fun ListsScreen(s: AppState, pro: ProManager) {
     var showNew by rememberSaveable { mutableStateOf(false) }
     var showPaywall by rememberSaveable { mutableStateOf(false) }
 
+    val ctx = LocalContext.current
+    var menu by remember { mutableStateOf(false) }
+    // restore a backup file (Pro): lists are added, nothing here is overwritten
+    val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        val text = runCatching { ctx.contentResolver.openInputStream(uri)?.use { it.readBytes().toString(Charsets.UTF_8) } }.getOrNull()
+        val n = text?.let { s.restoreBackup(it) }
+        Toast.makeText(ctx, if (n == null) ctx.getString(R.string.backup_bad) else ctx.getString(R.string.backup_done, n.toString()),
+            Toast.LENGTH_LONG).show()
+    }
+
     val open = s.lists.firstOrNull { it.id == openId }
     if (open != null) {
-        ListDetail(s, pro, open, onBack = { openId = null })
+        ListDetail(s, pro, open, onBack = { openId = null }, onOpen = { openId = it })
         return
     }
 
@@ -77,6 +94,26 @@ fun ListsScreen(s: AppState, pro: ProManager) {
                 // Free: one list. More lists = Pro.
                 if (s.lists.isNotEmpty() && !pro.hasPro) showPaywall = true else showNew = true
             }) { Icon(Icons.Filled.Add, stringResource(R.string.new_list)) }
+            Box {
+                IconButton(onClick = { menu = true }, modifier = Modifier.testTag("lists_menu")) {
+                    Icon(Icons.Filled.MoreVert, stringResource(R.string.more))
+                }
+                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.backup_export)) },
+                        trailingIcon = if (!pro.purchased) ({ ProBadge() }) else null,
+                        enabled = s.lists.isNotEmpty(),
+                        onClick = { menu = false; if (!pro.hasPro) showPaywall = true else Exporter.shareBackup(ctx, s) },
+                        modifier = Modifier.testTag("backup_export"),
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.backup_import)) },
+                        trailingIcon = if (!pro.purchased) ({ ProBadge() }) else null,
+                        onClick = { menu = false; if (!pro.hasPro) showPaywall = true else importer.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) },
+                        modifier = Modifier.testTag("backup_import"),
+                    )
+                }
+            }
         }
         if (s.lists.isEmpty()) {
             Box(Modifier.weight(1f).fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
@@ -123,10 +160,12 @@ fun ListsScreen(s: AppState, pro: ProManager) {
 }
 
 @Composable
-private fun ListDetail(s: AppState, pro: ProManager, list: CutList, onBack: () -> Unit) {
+private fun ListDetail(s: AppState, pro: ProManager, list: CutList, onBack: () -> Unit, onOpen: (String) -> Unit) {
     val ctx = LocalContext.current
     var showPaywall by rememberSaveable { mutableStateOf(false) }
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
+    var menu by remember { mutableStateOf(false) }
+    val copySuffix = stringResource(R.string.copy_suffix)
     val u = s.units
 
     fun export(pdf: Boolean) {
@@ -142,6 +181,22 @@ private fun ListDetail(s: AppState, pro: ProManager, list: CutList, onBack: () -
             Text(list.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), maxLines = 1)
             IconButton(onClick = { confirmDelete = true }, modifier = Modifier.testTag("list_delete")) {
                 Icon(Icons.Filled.Delete, stringResource(R.string.delete))
+            }
+            Box {
+                IconButton(onClick = { menu = true }, modifier = Modifier.testTag("list_menu")) {
+                    Icon(Icons.Filled.MoreVert, stringResource(R.string.more))
+                }
+                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.duplicate)) },
+                        trailingIcon = if (!pro.purchased) ({ ProBadge() }) else null,
+                        onClick = {
+                            menu = false
+                            if (!pro.hasPro) showPaywall = true else s.duplicateList(list.id, copySuffix)?.let(onOpen)
+                        },
+                        modifier = Modifier.testTag("list_duplicate"),
+                    )
+                }
             }
         }
         LazyColumn(
@@ -181,11 +236,17 @@ private fun ListDetail(s: AppState, pro: ProManager, list: CutList, onBack: () -
                     PctField(stringResource(R.string.markup), list.id + "m", list.markupPct, "field_markup") { v ->
                         s.updateList(list.id) { it.copy(markupPct = v) }
                     }
+                    QuoteSection(s, pro, list) { showPaywall = true }
                     HorizontalDivider()
                     TotalRow(stringResource(R.string.total_weight), Fmt.weight(list.grossKg, u), "total_weight")
                     if (list.hasCost) {
                         TotalRow(stringResource(R.string.subtotal), Fmt.money(list.netCost, s.currency), "subtotal")
-                        TotalRow(stringResource(R.string.total), Fmt.money(list.totalCost, s.currency), "total_cost")
+                        val vatOn = list.vatPct > 0 && pro.hasPro
+                        TotalRow(stringResource(if (vatOn) R.string.total_ex_vat else R.string.total), Fmt.money(list.totalCost, s.currency), "total_cost")
+                        if (vatOn) {
+                            TotalRow(stringResource(R.string.vat) + " " + Fmt.edit(list.vatPct) + " %", Fmt.money(list.vat, s.currency), "total_vat")
+                            TotalRow(stringResource(R.string.total_with_vat), Fmt.money(list.totalWithVat, s.currency), "total_with_vat")
+                        }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         ExportButton(stringResource(R.string.export_pdf), !pro.purchased, Modifier.weight(1f).testTag("export_pdf")) { export(true) }
@@ -210,6 +271,34 @@ private fun ListDetail(s: AppState, pro: ProManager, list: CutList, onBack: () -
         )
     }
     if (showPaywall) PaywallSheet(pro) { showPaywall = false }
+}
+
+/** Client, quote number, VAT, validity and notes for the PDF quote (Pro). Without Pro: one row that opens the paywall. */
+@Composable
+private fun QuoteSection(s: AppState, pro: ProManager, list: CutList, onLocked: () -> Unit) {
+    Surface(shape = CardShape, color = MaterialTheme.colorScheme.surfaceContainer, modifier = Modifier.fillMaxWidth().testTag("quote_section")) {
+        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth().then(if (pro.hasPro) Modifier else Modifier.clickable { onLocked() }.testTag("quote_locked"))) {
+                Text(stringResource(R.string.quote), style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f))
+                if (!pro.purchased) ProBadge()
+            }
+            if (!pro.hasPro) return@Column
+            fun upd(f: (CutList) -> CutList) = s.updateList(list.id, f)
+            OutlinedTextField(list.client, { v -> upd { it.copy(client = v) } }, singleLine = true,
+                label = { Text(stringResource(R.string.client)) }, modifier = Modifier.fillMaxWidth().testTag("quote_client"))
+            OutlinedTextField(list.quoteNo, { v -> upd { it.copy(quoteNo = v.take(30)) } }, singleLine = true,
+                label = { Text(stringResource(R.string.quote_no)) }, modifier = Modifier.fillMaxWidth().testTag("quote_no"))
+            PctField(stringResource(R.string.vat_pct), list.id + "v", list.vatPct, "quote_vat") { v -> upd { it.copy(vatPct = v.coerceIn(0.0, 100.0)) } }
+            var days by remember(list.id + "d") { mutableStateOf(if (list.validDays == 0) "" else list.validDays.toString()) }
+            NumberField(stringResource(R.string.valid_days), "", days, { t ->
+                days = t; upd { it.copy(validDays = (t.toIntOrNull() ?: 0).coerceIn(0, 3650)) }
+            }, integer = true, tag = "quote_valid")
+            OutlinedTextField(list.notes, { v -> upd { it.copy(notes = v.take(1000)) } }, minLines = 2, maxLines = 6,
+                label = { Text(stringResource(R.string.notes)) }, modifier = Modifier.fillMaxWidth().testTag("quote_notes"))
+        }
+    }
 }
 
 /** Percentage input that keeps its own text (so "2," can be typed) and reports parsed values. */

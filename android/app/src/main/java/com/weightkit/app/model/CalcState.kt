@@ -24,8 +24,10 @@ class CalcState(private val catalog: Catalog, units: UnitSystem) {
     val fields = mutableStateMapOf<String, String>()
     var lengthText by mutableStateOf("6")
     var qtyText by mutableStateOf("1")
-    /** Price per kg (metric) or per lb (imperial), as typed. */
+    /** Price per kg/lb, per m/ft or per piece (see [priceUnit]), as typed. */
     var priceText by mutableStateOf("")
+    /** What [priceText] refers to. Per metre / per piece need Pro (see [proAllowed]). */
+    var priceUnit by mutableStateOf(PriceUnit.KG)
     var targetText by mutableStateOf("")
     var familyId by mutableStateOf("ipe")
     var itemIndex by mutableIntStateOf(0)
@@ -54,8 +56,30 @@ class CalcState(private val catalog: Catalog, units: UnitSystem) {
 
     private fun mmOf(key: String) = base("f:$key", fields[key] ?: "", units.mmPerDim)
     private val lengthM: Double? get() = base("length", lengthText, units.mPerLength)
-    /** Internal price per kg, null if not entered. */
-    val pricePerKg: Double? get() = base("price", priceText, 1 / units.kgPerWeight)?.takeIf { it > 0 }
+    /** Price unit in effect: per metre / per piece fall back to per kg without Pro. */
+    val effectivePriceUnit: PriceUnit get() = if (proAllowed || priceUnit == PriceUnit.KG) priceUnit else PriceUnit.KG
+
+    /** Internal price (per kg, per metre or per piece – see [effectivePriceUnit]), null if not entered. */
+    val pricePerKg: Double?
+        get() = when (effectivePriceUnit) {
+            PriceUnit.KG -> base("price", priceText, 1 / units.kgPerWeight)
+            PriceUnit.M -> base("price_m", priceText, 1 / units.mPerLength)
+            PriceUnit.PC -> Fmt.parse(priceText)
+        }?.takeIf { it > 0 }
+
+    /** Length of one piece in metres; null for sheets (they have no length). */
+    val pieceLengthM: Double? get() = if (shape == ShapeKind.PLATE) null else lengthM?.takeIf { it > 0 }
+
+    /** Cost of the calculated quantity in the chosen price unit; null without a price. */
+    fun cost(r: CalcResult): Double? = pricePerKg?.let { p ->
+        when (effectivePriceUnit) {
+            PriceUnit.KG -> p * r.totalKg
+            PriceUnit.M -> pieceLengthM?.let { p * it * quantity }
+            PriceUnit.PC -> p * quantity
+        }
+    }
+
+    fun changePriceUnit(u: PriceUnit) { if (u != priceUnit) { priceUnit = u; exact.remove("price"); exact.remove("price_m") } }
     /** Target weight in kg, null if not entered. */
     val targetKg: Double? get() = base("target", targetText, units.kgPerWeight)?.takeIf { it > 0 }
 
@@ -74,7 +98,11 @@ class CalcState(private val catalog: Catalog, units: UnitSystem) {
             convert("f:$k", fields[k] ?: "", old.mmPerDim, new.mmPerDim)?.let { fields[k] = it }
         }
         convert("length", lengthText, old.mPerLength, new.mPerLength)?.let { lengthText = it }
-        convert("price", priceText, 1 / old.kgPerWeight, 1 / new.kgPerWeight)?.let { priceText = it }
+        when (priceUnit) {
+            PriceUnit.KG -> convert("price", priceText, 1 / old.kgPerWeight, 1 / new.kgPerWeight)?.let { priceText = it }
+            PriceUnit.M -> convert("price_m", priceText, 1 / old.mPerLength, 1 / new.mPerLength)?.let { priceText = it }
+            PriceUnit.PC -> {}
+        }
         convert("target", targetText, old.kgPerWeight, new.kgPerWeight)?.let { targetText = it }
         units = new
     }
@@ -149,7 +177,7 @@ class CalcState(private val catalog: Catalog, units: UnitSystem) {
     fun snapshot(): String = JSONObject()
         .put("units", units.name).put("shape", shape.name).put("material", materialId)
         .put("fields", JSONObject(fields.toMap())).put("length", lengthText).put("qty", qtyText)
-        .put("price", priceText).put("target", targetText).put("family", familyId)
+        .put("price", priceText).put("priceUnit", priceUnit.name).put("target", targetText).put("family", familyId)
         .put("item", itemIndex).put("rebar", rebarIndex).toString()
 
     /** Restores a [snapshot]; ignored if it was taken in another unit system or is unreadable. */
@@ -165,6 +193,7 @@ class CalcState(private val catalog: Catalog, units: UnitSystem) {
         lengthText = o.optString("length", lengthText)
         qtyText = o.optString("qty", qtyText)
         priceText = o.optString("price", priceText)
+        runCatching { PriceUnit.valueOf(o.optString("priceUnit", "KG")) }.getOrNull()?.let { priceUnit = it }
         targetText = o.optString("target", targetText)
         familyId = o.optString("family", familyId)
         itemIndex = o.optInt("item", itemIndex)

@@ -9,6 +9,7 @@ data class CsvLabels(
     val item: String, val shape: String, val material: String, val size: String, val qty: String,
     val weightPiece: String, val totalWeight: String, val cost: String,
     val waste: String, val markup: String, val total: String,
+    val vat: String = "VAT", val totalWithVat: String = "Total incl. VAT",
 )
 
 /**
@@ -39,6 +40,10 @@ object CsvWriter {
         rows += q(l.markup) + "," + n1(list.markupPct)
         rows += q(l.totalWeight + " (${u.weightUnit})") + "," + n(list.grossKg / u.kgPerWeight)
         if (list.hasCost) rows += q(l.total + " ($currency)") + "," + n2(list.totalCost)
+        if (list.hasCost && list.vatPct > 0) {
+            rows += q(l.vat + " %") + "," + n1(list.vatPct)
+            rows += q(l.totalWithVat + " ($currency)") + "," + n2(list.totalWithVat)
+        }
         return BOM + rows.joinToString("\r\n") + "\r\n"
     }
 }

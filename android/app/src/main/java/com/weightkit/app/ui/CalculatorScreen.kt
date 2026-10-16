@@ -66,6 +66,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.weightkit.app.R
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.material3.FilterChip
+import androidx.compose.runtime.LaunchedEffect
+import com.weightkit.app.model.PriceUnit
 import com.weightkit.app.model.AppState
 import com.weightkit.app.model.CalcOutcome
 import com.weightkit.app.model.CalcResult
@@ -146,10 +151,18 @@ fun CalculatorScreen(s: AppState, pro: ProManager) {
                 }
             }
 
+            val metric = units == UnitSystem.METRIC
+            // sheets have no length: per metre makes no sense there
+            LaunchedEffect(s.shape) { if (s.shape == ShapeKind.PLATE && s.calc.priceUnit == PriceUnit.M) s.calc.changePriceUnit(PriceUnit.KG) }
             NumberField(
-                stringResource(if (units == UnitSystem.METRIC) R.string.price_per_kg else R.string.price_per_lb),
+                stringResource(when (s.priceUnit) {
+                    PriceUnit.KG -> if (metric) R.string.price_per_kg else R.string.price_per_lb
+                    PriceUnit.M -> if (metric) R.string.price_per_m else R.string.price_per_ft
+                    PriceUnit.PC -> R.string.price_per_piece
+                }),
                 s.currency, s.priceText, { s.priceText = it }, tag = "field_price",
             )
+            PriceUnitRow(s, pro) { showPaywall = true }
 
             ReverseSection(s, pro, outcome) { showPaywall = true }
 
@@ -159,7 +172,8 @@ fun CalculatorScreen(s: AppState, pro: ProManager) {
                     val shapeName = if (s.shape == ShapeKind.SECTION) (s.family?.name ?: shapeTitle) else shapeTitle
                     val name = s.addToList(
                         ListItem(shape = shapeName, material = material.name, size = s.sizeDescription(),
-                            qty = s.quantity, pieceKg = r.pieceKg, pricePerKg = s.pricePerKg),
+                            qty = s.quantity, pieceKg = r.pieceKg, pricePerKg = s.pricePerKg,
+                            priceUnit = s.priceUnit, pieceM = s.calc.pieceLengthM),
                         defaultList,
                     )
                     Toast.makeText(ctx, res.getString(R.string.added_to, name), Toast.LENGTH_SHORT).show()
@@ -177,12 +191,12 @@ fun CalculatorScreen(s: AppState, pro: ProManager) {
             Row(Modifier.weight(1f)) {
                 form(Modifier.weight(1.4f).fillMaxHeight())
                 Column(Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState())) {
-                    ResultCard(outcome, units, s.pricePerKg, s.currency, s.quantity)
+                    ResultCard(outcome, units, (outcome as? CalcOutcome.Ok)?.r?.let { s.cost(it) }, s.currency, s.quantity)
                 }
             }
         } else {
             form(Modifier.weight(1f))
-            ResultCard(outcome, units, s.pricePerKg, s.currency, s.quantity)
+            ResultCard(outcome, units, (outcome as? CalcOutcome.Ok)?.r?.let { s.cost(it) }, s.currency, s.quantity)
         }
     }
 
@@ -285,7 +299,7 @@ private fun KV(k: String, v: String, tag: String) {
 }
 
 @Composable
-private fun ResultCard(outcome: CalcOutcome, units: UnitSystem, pricePerKg: Double?, currency: String, qty: Int) {
+private fun ResultCard(outcome: CalcOutcome, units: UnitSystem, cost: Double?, currency: String, qty: Int) {
     Surface(color = MaterialTheme.colorScheme.surfaceContainerHigh, tonalElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
         Column {
             HorizontalDivider()
@@ -300,7 +314,7 @@ private fun ResultCard(outcome: CalcOutcome, units: UnitSystem, pricePerKg: Doub
                         Spacer(Modifier.width(8.dp))
                         Text(stringResource(R.string.invalid_wall), color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.SemiBold)
                     }
-                    is CalcOutcome.Ok -> ResultContent(outcome.r, units, pricePerKg, currency, qty)
+                    is CalcOutcome.Ok -> ResultContent(outcome.r, units, cost, currency, qty)
                 }
             }
         }
@@ -308,7 +322,7 @@ private fun ResultCard(outcome: CalcOutcome, units: UnitSystem, pricePerKg: Doub
 }
 
 @Composable
-private fun ResultContent(r: CalcResult, units: UnitSystem, pricePerKg: Double?, currency: String, qty: Int) {
+private fun ResultContent(r: CalcResult, units: UnitSystem, cost: Double?, currency: String, qty: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(stringResource(R.string.total_weight), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
         Text(Fmt.weight(r.totalKg, units), fontSize = 32.sp, fontWeight = FontWeight.Bold, maxLines = 1,
@@ -320,7 +334,7 @@ private fun ResultContent(r: CalcResult, units: UnitSystem, pricePerKg: Double?,
             if (units == UnitSystem.METRIC) Metric(stringResource(R.string.weight_per_m), Fmt.smart(pm) + " kg/m", "result_per_length")
             else Metric(stringResource(R.string.weight_per_ft), Fmt.smart(pm * 0.3048 / 0.45359237) + " lb/ft", "result_per_length")
         }
-        pricePerKg?.let { Metric(stringResource(R.string.cost), Fmt.money(it * r.totalKg, currency), "result_cost") }
+        cost?.let { Metric(stringResource(R.string.cost), Fmt.money(it, currency), "result_cost") }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
         Metric(stringResource(R.string.volume), volumeText(r.volumeM3 * qty, units), "result_volume")
@@ -393,6 +407,30 @@ fun MaterialSheet(s: AppState, onDismiss: () -> Unit) {
                     }
                 }
             }
+        }
+    }
+}
+
+/** Price per kg (free) · per metre · per piece (Pro). */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun PriceUnitRow(s: AppState, pro: ProManager, onLocked: () -> Unit) {
+    val metric = s.units == UnitSystem.METRIC
+    val opts = buildList {
+        add(PriceUnit.KG to (if (metric) R.string.price_unit_kg else R.string.price_unit_lb))
+        if (s.shape != ShapeKind.PLATE) add(PriceUnit.M to (if (metric) R.string.price_unit_m else R.string.price_unit_ft))
+        add(PriceUnit.PC to R.string.price_unit_pc)
+    }
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.testTag("price_unit_row")) {
+        opts.forEach { (u, label) ->
+            val locked = u != PriceUnit.KG && !pro.hasPro
+            FilterChip(
+                selected = s.priceUnit == u,
+                onClick = { if (locked) onLocked() else s.calc.changePriceUnit(u) },
+                label = { Text(stringResource(label)) },
+                trailingIcon = if (u != PriceUnit.KG && !pro.purchased) ({ ProBadge() }) else null,
+                modifier = Modifier.testTag("price_unit_" + u.name.lowercase()),
+            )
         }
     }
 }
