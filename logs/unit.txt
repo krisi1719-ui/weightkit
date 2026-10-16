@@ -1,0 +1,113 @@
+IOSurfaceClientSetSurfaceNotify failed e00002c7
+2026-10-16 12:18:07.599773+0000 WeightKit[10716:35954] fopen failed for data file: errno = 2 (No such file or directory)
+2026-10-16 12:18:08.396912+0000 WeightKit[10716:35954] fopen failed for data file: errno = 2 (No such file or directory)
+2026-10-16 12:18:08.438958+0000 WeightKit[10716:35954] [error] building pipeline plane_color-ca16feba4 took 0.839225 seconds
+2026-10-16 12:18:09.865948+0000 WeightKit[10716:36965] [Client] Synchronous remote object proxy returned error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process.}
+2026-10-16 12:18:09.866650+0000 WeightKit[10716:37299] [Client] Updating selectors failed with: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process.}
+Client] Synchronous remote object proxy returned error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process.}
+2026-10-16 12:18:09.868897+0000 WeightKit[10716:37302] [Client] Updating selectors failed with: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process.}
+2026-10-16 12:18:10.327985+0000 WeightKit[10716:37302] [Client] Updating selectors failed with: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process.}
+2026-10-16 12:18:10.328637+0000 WeightKit[10716:37302] [Client] Updating selectors after delegate addition failed with: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.commcenter.coretelephony.xpc was invalidated: Connection init failed at lookup with error 3 - No such process.}
+Test Case '-[WeightKitTests.AdPolicyTests testBannerOnlyForFreeUsers]' started.
+Test Case '-[WeightKitTests.AdPolicyTests testBannerOnlyForFreeUsers]' passed (0.002 seconds).
+Test Case '-[WeightKitTests.AdPolicyTests testClockBackDoesNotMakeAdsDueEarlier]' started.
+Test Case '-[WeightKitTests.AdPolicyTests testClockBackDoesNotMakeAdsDueEarlier]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.AdPolicyTests testFirstFullScreenOnly48hAfterAdsStartThenAtMostEvery48h]' started.
+Test Case '-[WeightKitTests.AdPolicyTests testFirstFullScreenOnly48hAfterAdsStartThenAtMostEvery48h]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.AdPolicyTests testNoAdsWhileTrialProOrReward]' started.
+Test Case '-[WeightKitTests.AdPolicyTests testNoAdsWhileTrialProOrReward]' passed (0.045 seconds).
+Test Case '-[WeightKitTests.CalcSnapshotTests testSnapshotFromOtherUnitSystemIsIgnored]' started.
+Test Case '-[WeightKitTests.CalcSnapshotTests testSnapshotFromOtherUnitSystemIsIgnored]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.CalcSnapshotTests testSnapshotRoundTripSurvivesTermination]' started.
+Test Case '-[WeightKitTests.CalcSnapshotTests testSnapshotRoundTripSurvivesTermination]' passed (0.005 seconds).
+Test Case '-[WeightKitTests.CatalogTests testAllFamiliesLoaded]' started.
+Test Case '-[WeightKitTests.CatalogTests testAllFamiliesLoaded]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.CatalogTests testEveryItemAreaTimes7850Within2PctOfTable]' started.
+Test Case '-[WeightKitTests.CatalogTests testEveryItemAreaTimes7850Within2PctOfTable]' passed (0.002 seconds).
+Test Case '-[WeightKitTests.CatalogTests testImperialWMatchesNominalLbFt]' started.
+Test Case '-[WeightKitTests.CatalogTests testImperialWMatchesNominalLbFt]' passed (0.002 seconds).
+Test Case '-[WeightKitTests.CatalogTests testProSplitMatchesMonetizationDoc]' started.
+Test Case '-[WeightKitTests.CatalogTests testProSplitMatchesMonetizationDoc]' passed (0.002 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testClockBack30DaysDoesNotExtendTrial]' started.
+Test Case '-[WeightKitTests.EntitlementTests testClockBack30DaysDoesNotExtendTrial]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testClockBackWithoutTouchAfterRelaunch]' started.
+Test Case '-[WeightKitTests.EntitlementTests testClockBackWithoutTouchAfterRelaunch]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testEarliestTrialTransactionWins]' started.
+Test Case '-[WeightKitTests.EntitlementTests testEarliestTrialTransactionWins]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testImplausibleTrialDateIsIgnored]' started.
+Test Case '-[WeightKitTests.EntitlementTests testImplausibleTrialDateIsIgnored]' passed (0.008 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testNoTrialUntilTheUserStartsIt]' started.
+Test Case '-[WeightKitTests.EntitlementTests testNoTrialUntilTheUserStartsIt]' passed (0.002 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testOwnershipRules]' started.
+Test Case '-[WeightKitTests.EntitlementTests testOwnershipRules]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testPurchasedOverridesEverythingRefundRemovesIt]' started.
+Test Case '-[WeightKitTests.EntitlementTests testPurchasedOverridesEverythingRefundRemovesIt]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testReinstallKeepsTrialStart]' started.
+Test Case '-[WeightKitTests.EntitlementTests testReinstallKeepsTrialStart]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testRewardLastsExactly24h]' started.
+Test Case '-[WeightKitTests.EntitlementTests testRewardLastsExactly24h]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testRewardNotExtendedByClockBack]' started.
+Test Case '-[WeightKitTests.EntitlementTests testRewardNotExtendedByClockBack]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.EntitlementTests testTrialDay0Day6_9ActiveDay7Ended]' started.
+Test Case '-[WeightKitTests.EntitlementTests testTrialDay0Day6_9ActiveDay7Ended]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testAngle]' started.
+Test Case '-[WeightKitTests.FormulaTests testAngle]' passed (0.026 seconds).
+Test Case '-[WeightKitTests.FormulaTests testChannel]' started.
+Test Case '-[WeightKitTests.FormulaTests testChannel]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testCommaDecimal]' started.
+Test Case '-[WeightKitTests.FormulaTests testCommaDecimal]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testDefaultScreenIsPlateAndQuantityMultiplies]' started.
+Test Case '-[WeightKitTests.FormulaTests testDefaultScreenIsPlateAndQuantityMultiplies]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testFlat]' started.
+Test Case '-[WeightKitTests.FormulaTests testFlat]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testHex]' started.
+Test Case '-[WeightKitTests.FormulaTests testHex]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testIBeam]' started.
+Test Case '-[WeightKitTests.FormulaTests testIBeam]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testPipe]' started.
+Test Case '-[WeightKitTests.FormulaTests testPipe]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testPlate1000x1000x10Is78_5kg]' started.
+Test Case '-[WeightKitTests.FormulaTests testPlate1000x1000x10Is78_5kg]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testProTablePickedInTrialNotUsedWithoutPro]' started.
+Test Case '-[WeightKitTests.FormulaTests testProTablePickedInTrialNotUsedWithoutPro]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testQuantityIsClamped]' started.
+Test Case '-[WeightKitTests.FormulaTests testQuantityIsClamped]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testRebarD12]' started.
+Test Case '-[WeightKitTests.FormulaTests testRebarD12]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testRectTube]' started.
+Test Case '-[WeightKitTests.FormulaTests testRectTube]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testRound]' started.
+Test Case '-[WeightKitTests.FormulaTests testRound]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testSectionIPE200UsesTabulatedArea]' started.
+Test Case '-[WeightKitTests.FormulaTests testSectionIPE200UsesTabulatedArea]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testSquare]' started.
+Test Case '-[WeightKitTests.FormulaTests testSquare]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testTee]' started.
+Test Case '-[WeightKitTests.FormulaTests testTee]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.FormulaTests testWallTooThick]' started.
+Test Case '-[WeightKitTests.FormulaTests testWallTooThick]' passed (0.003 seconds).
+Test Case '-[WeightKitTests.FormulaTests testZeroEmptyNegativeAreMissing]' started.
+Test Case '-[WeightKitTests.FormulaTests testZeroEmptyNegativeAreMissing]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.ListsCsvTests testCsvFileWrittenWithBom]' started.
+Test Case '-[WeightKitTests.ListsCsvTests testCsvFileWrittenWithBom]' passed (0.003 seconds).
+Test Case '-[WeightKitTests.ListsCsvTests testCsvFormat]' started.
+Test Case '-[WeightKitTests.ListsCsvTests testCsvFormat]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.ListsCsvTests testCsvImperial]' started.
+Test Case '-[WeightKitTests.ListsCsvTests testCsvImperial]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.ListsCsvTests testExportArtifacts]' started.
+Test Case '-[WeightKitTests.ListsCsvTests testExportArtifacts]' passed (0.113 seconds).
+Test Case '-[WeightKitTests.ListsCsvTests testPdfFileHasContent]' started.
+Test Case '-[WeightKitTests.ListsCsvTests testPdfFileHasContent]' passed (0.015 seconds).
+Test Case '-[WeightKitTests.ListsCsvTests testPersistenceRoundTrip]' started.
+Test Case '-[WeightKitTests.ListsCsvTests testPersistenceRoundTrip]' passed (0.021 seconds).
+Test Case '-[WeightKitTests.ListsCsvTests testTotalsWasteMarkupItemsWithoutPrice]' started.
+Test Case '-[WeightKitTests.ListsCsvTests testTotalsWasteMarkupItemsWithoutPrice]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.QuotePriceTests testCostPerMetrePieceKg]' started.
+Test Case '-[WeightKitTests.QuotePriceTests testCostPerMetrePieceKg]' passed (0.033 seconds).
+Test Case '-[WeightKitTests.QuotePriceTests testOldListsStillDecode]' started.
+Test Case '-[WeightKitTests.QuotePriceTests testOldListsStillDecode]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.QuotePriceTests testQuoteRoundTrip]' started.
+Test Case '-[WeightKitTests.QuotePriceTests testQuoteRoundTrip]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.QuotePriceTests testVat]' started.
+Test Case '-[WeightKitTests.QuotePriceTests testVat]' passed (0.001 seconds).
+Test Case '-[WeightKitTests.StoreKitTests testBuyUnlocksThenRefundRemovesPro]' started.
