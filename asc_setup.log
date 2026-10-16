@@ -1,0 +1,12 @@
+App: Metal Weight Calc - WeightKit com.ggshop.weightkit
+Version 1.0.1 PREPARE_FOR_SUBMISSION
+IAP com.weightkit.app.pro 6821449245 MISSING_METADATA
+  localizations: en-US, de-DE, fr-FR, es-ES, tr, ru
+  availability: all 175 territories
+  review screenshot uploaded
+IAP com.weightkit.app.trial14 6821449127 READY_TO_SUBMIT
+  localizations: en-US, de-DE, fr-FR, es-ES, tr, ru
+  availability: all 175 territories
+  review screenshot uploaded
+
+==== 0 problem(s)
