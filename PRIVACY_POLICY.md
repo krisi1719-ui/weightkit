@@ -1,6 +1,6 @@
 # WeightKit – Privacy Policy
 
-_Effective date: 6 October 2026 · Last updated: 11 October 2026_
+_Effective date: 6 October 2026 · Last updated: 16 October 2026_
 
 This privacy policy explains how the **WeightKit – Metal Weight Calculator** app for Android and iPhone ("WeightKit", "the app") handles information. The app is published by **GGSHOP LIMITED** ("we", "us", "our"), which is the data controller for the data described in this policy.
 
@@ -8,7 +8,7 @@ Contact: **ggshoplimitedco@gmail.com**
 
 ## 1. Summary
 
-- Your calculations, lists, prices, company name and custom materials stay **on your device**. There is no account and we never receive this content.
+- Your calculations, lists, prices, quotes (client, VAT, notes), company details, logo and custom materials stay **on your device**. There is no account and we never receive this content.
 - The **free version shows ads** from **Google AdMob**. AdMob collects device identifiers and usage data to show and measure ads (see section 5).
 - The **Android app** sends a **hashed device ID** to our own server to run the free trial and to verify Google Play purchases (see section 4).
 - Purchases are processed by **Google Play** or the **Apple App Store**. We never see your payment details.
@@ -16,11 +16,13 @@ Contact: **ggshoplimitedco@gmail.com**
 
 ## 2. Information stored only on your device
 
-Everything you enter in the app – dimensions, materials and densities, prices and currency, cut lists, waste and markup values, company name, custom materials, theme and unit settings – is stored only in the app's private storage on your device. We do not receive it.
+Everything you enter in the app – dimensions, materials and densities, prices and currency, cut lists, waste, markup and VAT values, quote details (client name, quote number, validity, notes), company name, address and contact details, the logo image you choose, custom materials, theme and unit settings – is stored only in the app's private storage on your device. We do not receive it.
 
 - **PDF and CSV export:** files are created on your device. They leave your device only if you choose to share them (for example by e-mail or a messaging app) through your phone's share sheet; the app you share with handles them under its own privacy policy.
-- **Backups:** your phone's own backup (Android Auto Backup to your Google account, or iCloud / device backup on iPhone) may include the app's settings and lists. These backups are handled by Google or Apple under their privacy policies; we cannot access them.
-- **iPhone free trial:** on iPhone you start the 14-day trial yourself with a free in-app item ("14-day Trial") from the App Store. Its start date comes from Apple's signed purchase record and a copy is kept in the device Keychain. This stays on your device and with Apple; nothing is sent to us.
+- **Logo:** if you add a logo for your PDF quotes, you pick the image yourself in the system photo picker. The app receives only that one image (it has no access to the rest of your photos), stores a reduced copy in its private folder and uses it only in PDFs you create.
+- **Backup file (Pro):** "Back up all lists" creates a file on your device with your lists, company details, logo and custom materials. It leaves your device only if you share or save it somewhere yourself. "Restore lists from file" reads only the file you pick.
+- **Phone backups:** your phone's own backup (Android Auto Backup to your Google account, or iCloud / device backup on iPhone) may include the app's settings and lists. These backups are handled by Google or Apple under their privacy policies; we cannot access them.
+- **iPhone free trial:** on iPhone you start the 7-day trial yourself with a free in-app item ("7-day Trial") from the App Store. Its start date comes from Apple's signed purchase record and a copy is kept in the device Keychain. This stays on your device and with Apple; nothing is sent to us.
 - Deleting the app deletes this data from the device (except a Keychain entry on iPhone, which iOS may keep, and any phone backups you have made).
 
 ## 3. Permissions the app uses
@@ -29,7 +31,7 @@ Everything you enter in the app – dimensions, materials and densities, prices 
 - **Advertising ID (Android, `AD_ID`)** – used by Google AdMob in the free version (section 5).
 - **No tracking on iPhone** – the iPhone app does not ask for App Tracking Transparency permission and does not give the advertising identifier (IDFA) to ads, so ads on iPhone are not personalised with it.
 
-The app does **not** use location, camera, microphone, contacts, photos, files outside its own folder, or any account login.
+The app does **not** use location, camera, microphone, contacts or any account login. It has no access to your photo library or your files: it only receives an image or a backup file that you pick yourself (see section 2).
 
 ## 4. Free trial and purchase verification (Android only)
 

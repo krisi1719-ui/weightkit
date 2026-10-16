@@ -36,13 +36,13 @@ METRIC AND IMPERIAL
 mm, m and kg – or inches, feet and pounds. Switch at any time: everything you typed is converted, nothing is lost. Weight per meter (kg/m) and per foot (lb/ft) included.
 
 PRICE AND COST
-Enter the price per kg or per lb and see the cost of every piece and of the whole order.
+Enter the price per kg or per lb – or (Pro) per meter / foot or per piece – and see the cost of every piece and of the whole order.
 
 REVERSE CALCULATION
 Know the weight, need the length? Get the length or plate thickness for a target weight, and how many whole pieces fit.
 
 CUT LISTS AND QUOTES
-Add items to a list, set waste % and markup %, and export a clean PDF quote with your company name or a CSV for Excel.
+Add items to a list, set waste % and markup %, and export a clean PDF quote with your company name or a CSV for Excel. With Pro the PDF becomes a full quote: your logo, client, quote number, VAT, validity date and notes. Duplicate lists for repeat jobs and back them up to a file for a new phone.
 
 MORE
 • Live results: total weight, weight per piece, per meter / per foot, volume, surface area
@@ -51,7 +51,7 @@ MORE
 • English, Deutsch, Français, Español, Türkçe, Русский, Български
 
 FREE AND PRO
-The calculator is free with all 13 shapes, all materials, price and the IPE, UPN, pipe SCH 40 and rebar tables. Pro adds HEA/HEB, W, ISMB/ISMC and SCH 80 tables, reverse calculation, unlimited lists, PDF/CSV export and custom materials – and removes all ads. Try every Pro feature free for 14 days, then unlock Pro with a single one-time purchase.
+The calculator is free with all 13 shapes, all materials, price and the IPE, UPN, pipe SCH 40 and rebar tables. Pro adds HEA/HEB, W, ISMB/ISMC and SCH 80 tables, reverse calculation, unlimited lists, PDF quotes with logo, VAT and client, CSV export, price per meter or piece, duplicate lists, list backup and custom materials – and removes all ads. Try every Pro feature free for 7 days, then unlock Pro with a single one-time purchase.
 
 The free version shows a small banner on the Lists screen and an occasional ad (at most once every two days) – never on the calculator.
 
@@ -91,9 +91,10 @@ METRISCH UND ZOLL
 mm, m und kg – oder Zoll, Fuß und Pfund. Jederzeit umschalten, nichts geht verloren. Gewicht pro Meter (kg/m) inklusive.
 
 PREIS, RÜCKWÄRTSRECHNUNG, MATERIALLISTEN
-• Preis pro kg und Gesamtkosten
+• Preis pro kg und Gesamtkosten – mit Pro auch pro Meter oder pro Stück
 • Länge oder Blechdicke aus einem Zielgewicht berechnen
 • Materiallisten mit Verschnitt und Aufschlag, Export als PDF-Angebot mit Firmenname oder CSV für Excel
+• Pro: Angebot mit Logo, Kunde, Angebotsnummer, MwSt., Gültigkeit und Hinweisen; Listen duplizieren und als Datei sichern
 
 AUSSERDEM
 • Live-Ergebnis: Gesamtgewicht, Stückgewicht, kg/m, Volumen, Oberfläche
@@ -101,7 +102,7 @@ AUSSERDEM
 • Heller und dunkler Modus
 
 KOSTENLOS UND PRO
-Der Rechner ist kostenlos mit allen 13 Formen, allen Werkstoffen, Preis sowie IPE-, UPN-, Rohr-SCH-40- und Betonstahl-Tabellen. Pro ergänzt HEA/HEB, W, ISMB/ISMC und SCH 80, Rückwärtsrechnung, unbegrenzte Listen, PDF/CSV-Export und eigene Werkstoffe – ohne Werbung. 14 Tage alle Pro-Funktionen gratis testen, danach einmaliger Kauf.
+Der Rechner ist kostenlos mit allen 13 Formen, allen Werkstoffen, Preis sowie IPE-, UPN-, Rohr-SCH-40- und Betonstahl-Tabellen. Pro ergänzt HEA/HEB, W, ISMB/ISMC und SCH 80, Rückwärtsrechnung, unbegrenzte Listen, PDF-Angebote mit Logo, MwSt. und Kunde, CSV-Export, Preis pro Meter oder Stück, Listen duplizieren und sichern sowie eigene Werkstoffe – ohne Werbung. 7 Tage alle Pro-Funktionen gratis testen, danach einmaliger Kauf.
 
 Die kostenlose Version zeigt ein kleines Banner auf dem Listen-Bildschirm und gelegentlich Werbung (höchstens alle zwei Tage) – nie im Rechner.
 
@@ -141,9 +142,10 @@ MÉTRIQUE ET IMPÉRIAL
 mm, m et kg – ou pouces, pieds et livres. Changez à tout moment sans rien ressaisir. Poids au mètre (kg/m) inclus.
 
 PRIX, CALCUL INVERSE, LISTES
-• Prix au kg et coût total
+• Prix au kg et coût total – avec Pro aussi au mètre ou à la pièce
 • Longueur ou épaisseur de tôle pour un poids donné
 • Listes de débit avec chute et marge, export d'un devis PDF avec le nom de votre société ou CSV pour Excel
+• Pro : devis avec logo, client, numéro, TVA, validité et notes ; listes à dupliquer et à sauvegarder dans un fichier
 
 AUSSI
 • Résultat en direct : poids total, poids unitaire, kg/m, volume, surface
@@ -151,7 +153,7 @@ AUSSI
 • Mode clair et sombre
 
 GRATUIT ET PRO
-Le calculateur est gratuit avec les 13 formes, tous les matériaux, le prix et les tableaux IPE, UPN, tube SCH 40 et fer à béton. Pro ajoute HEA/HEB, W, ISMB/ISMC et SCH 80, le calcul inverse, les listes illimitées, l'export PDF/CSV et les matériaux personnalisés – sans publicité. Essayez toutes les fonctions Pro gratuitement pendant 14 jours, puis un achat unique.
+Le calculateur est gratuit avec les 13 formes, tous les matériaux, le prix et les tableaux IPE, UPN, tube SCH 40 et fer à béton. Pro ajoute HEA/HEB, W, ISMB/ISMC et SCH 80, le calcul inverse, les listes illimitées, les devis PDF avec logo, TVA et client, l'export CSV, le prix au mètre ou à la pièce, la duplication et la sauvegarde des listes et les matériaux personnalisés – sans publicité. Essayez toutes les fonctions Pro gratuitement pendant 7 jours, puis un achat unique.
 
 La version gratuite affiche une petite bannière sur l'écran Listes et parfois une publicité (au maximum tous les deux jours) – jamais dans le calculateur.
 
@@ -191,9 +193,10 @@ MÉTRICO E IMPERIAL
 mm, m y kg, o pulgadas, pies y libras. Cambia cuando quieras sin volver a escribir. Peso por metro (kg/m) incluido.
 
 PRECIO, CÁLCULO INVERSO, LISTAS
-• Precio por kg y coste total
+• Precio por kg y coste total – con Pro también por metro o por pieza
 • Longitud o espesor de chapa para un peso objetivo
 • Listas de corte con merma y margen, exporta un presupuesto PDF con el nombre de tu empresa o CSV para Excel
+• Pro: presupuesto con logo, cliente, número, IVA, validez y notas; duplica listas y guárdalas en un archivo
 
 ADEMÁS
 • Resultado al instante: peso total, peso por pieza, kg/m, volumen, superficie
@@ -201,7 +204,7 @@ ADEMÁS
 • Modo claro y oscuro
 
 GRATIS Y PRO
-La calculadora es gratis con las 13 formas, todos los materiales, el precio y las tablas IPE, UPN, tubo SCH 40 y varilla. Pro añade HEA/HEB, W, ISMB/ISMC y SCH 80, cálculo inverso, listas ilimitadas, exportación PDF/CSV y materiales propios, sin anuncios. Prueba todas las funciones Pro gratis durante 14 días y luego desbloquéalas con un único pago.
+La calculadora es gratis con las 13 formas, todos los materiales, el precio y las tablas IPE, UPN, tubo SCH 40 y varilla. Pro añade HEA/HEB, W, ISMB/ISMC y SCH 80, cálculo inverso, listas ilimitadas, presupuestos PDF con logo, IVA y cliente, exportación CSV, precio por metro o por pieza, duplicar y guardar listas y materiales propios, sin anuncios. Prueba todas las funciones Pro gratis durante 7 días y luego desbloquéalas con un único pago.
 
 La versión gratuita muestra un pequeño banner en la pantalla Listas y algún anuncio ocasional (como máximo cada dos días), nunca en la calculadora.
 
@@ -241,9 +244,10 @@ METRİK VE İNÇ
 mm, m ve kg ya da inç, fit ve pound. İstediğiniz zaman değiştirin, yazdıklarınız kaybolmaz. Metre ağırlığı (kg/m) dahil.
 
 FİYAT, TERS HESAPLAMA, LİSTELER
-• kg fiyatı ve toplam maliyet
+• kg fiyatı ve toplam maliyet – Pro ile metre veya adet fiyatı da
 • Hedef ağırlık için gereken uzunluk veya sac kalınlığı
 • Fire ve kâr marjlı kesim listeleri, firma adınızla PDF teklif veya Excel için CSV
+• Pro: logo, müşteri, teklif no, KDV, geçerlilik ve notlu teklif; listeleri çoğaltın ve dosyaya yedekleyin
 
 AYRICA
 • Anında sonuç: toplam ağırlık, parça ağırlığı, kg/m, hacim, yüzey alanı
@@ -251,7 +255,7 @@ AYRICA
 • Açık ve koyu tema
 
 ÜCRETSİZ VE PRO
-Hesap makinesi 13 şekil, tüm malzemeler, fiyat ve IPE, UPN, boru SCH 40 ve inşaat demiri tablolarıyla ücretsizdir. Pro; HEA/HEB, W, ISMB/ISMC ve SCH 80 tablolarını, ters hesaplamayı, sınırsız listeyi, PDF/CSV dışa aktarmayı ve özel malzemeleri ekler, reklamları kaldırır. Tüm Pro özelliklerini 14 gün ücretsiz deneyin, sonra tek seferlik satın alma.
+Hesap makinesi 13 şekil, tüm malzemeler, fiyat ve IPE, UPN, boru SCH 40 ve inşaat demiri tablolarıyla ücretsizdir. Pro; HEA/HEB, W, ISMB/ISMC ve SCH 80 tablolarını, ters hesaplamayı, sınırsız listeyi, logolu, KDV’li ve müşterili PDF teklifleri, CSV dışa aktarmayı, metre veya adet fiyatını, liste çoğaltma ve yedeklemeyi ve özel malzemeleri ekler, reklamları kaldırır. Tüm Pro özelliklerini 7 gün ücretsiz deneyin, sonra tek seferlik satın alma.
 
 Ücretsiz sürüm Listeler ekranında küçük bir banner ve ara sıra reklam (en fazla iki günde bir) gösterir; hesap makinesinde asla.
 
@@ -291,9 +295,10 @@ Soru ve öneriler: ggshoplimitedco@gmail.com
 мм, м и кг – или дюймы, футы и фунты. Переключение в любой момент без повторного ввода. Масса погонного метра (кг/м).
 
 ЦЕНА, ОБРАТНЫЙ РАСЧЁТ, СПЕЦИФИКАЦИИ
-• Цена за кг и общая стоимость
+• Цена за кг и общая стоимость – с Pro также за метр или за штуку
 • Длина или толщина листа по заданному весу
 • Спецификации с отходами и наценкой, экспорт PDF-сметы с названием компании или CSV для Excel
+• Pro: предложение с логотипом, клиентом, номером, НДС, сроком действия и примечаниями; копии списков и резервная копия в файл
 
 ТАКЖЕ
 • Мгновенный результат: общий вес, вес штуки, кг/м, объём, площадь поверхности
@@ -301,7 +306,7 @@ Soru ve öneriler: ggshoplimitedco@gmail.com
 • Светлая и тёмная тема
 
 БЕСПЛАТНО И PRO
-Калькулятор бесплатен: все 13 форм, все материалы, цена и таблицы IPE, UPN, трубы SCH 40 и арматура. Pro добавляет HEA/HEB, W, ISMB/ISMC и SCH 80, обратный расчёт, неограниченные списки, экспорт PDF/CSV и свои материалы – без рекламы. 14 дней все функции Pro бесплатно, затем разовая покупка.
+Калькулятор бесплатен: все 13 форм, все материалы, цена и таблицы IPE, UPN, трубы SCH 40 и арматура. Pro добавляет HEA/HEB, W, ISMB/ISMC и SCH 80, обратный расчёт, неограниченные списки, PDF-предложения с логотипом, НДС и клиентом, экспорт CSV, цену за метр или штуку, копирование и резервную копию списков и свои материалы – без рекламы. 7 дней все функции Pro бесплатно, затем разовая покупка.
 
 В бесплатной версии – небольшой баннер на экране «Списки» и изредка реклама (не чаще раза в два дня), но никогда в калькуляторе.
 
@@ -341,9 +346,10 @@ Soru ve öneriler: ggshoplimitedco@gmail.com
 mm, m и kg – или инчове, футове и паундове. Превключване по всяко време без повторно въвеждане. Тегло на линеен метър (kg/m).
 
 ЦЕНА, ОБРАТНО ИЗЧИСЛЕНИЕ, СПИСЪЦИ
-• Цена за kg и обща стойност
+• Цена за kg и обща стойност – с Pro и за метър или за брой
 • Дължина или дебелина на ламарина по зададено тегло
 • Списъци с отпадък и надценка, експорт на PDF оферта с името на фирмата или CSV за Excel
+• Pro: оферта с лого, клиент, номер, ДДС, срок на валидност и бележки; дублиране на списъци и архив във файл
 
 ОЩЕ
 • Резултат веднага: общо тегло, тегло на брой, kg/m, обем, повърхност
@@ -351,7 +357,7 @@ mm, m и kg – или инчове, футове и паундове. Прев�
 • Светла и тъмна тема
 
 БЕЗПЛАТНО И PRO
-Калкулаторът е безплатен с всички 13 форми, всички материали, цена и таблиците IPE, UPN, тръби SCH 40 и арматура. Pro добавя HEA/HEB, W, ISMB/ISMC и SCH 80, обратно изчисление, неограничени списъци, PDF/CSV експорт и собствени материали – без реклами. 14 дни всички Pro функции безплатно, после еднократна покупка.
+Калкулаторът е безплатен с всички 13 форми, всички материали, цена и таблиците IPE, UPN, тръби SCH 40 и арматура. Pro добавя HEA/HEB, W, ISMB/ISMC и SCH 80, обратно изчисление, неограничени списъци, PDF оферти с лого, ДДС и клиент, CSV експорт, цена за метър или брой, дублиране и архив на списъците и собствени материали – без реклами. 7 дни всички Pro функции безплатно, после еднократна покупка.
 
 Безплатната версия показва малък банер на екрана „Списъци“ и понякога реклама (най-много веднъж на два дни) – никога в калкулатора.
 
