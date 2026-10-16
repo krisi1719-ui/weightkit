@@ -31,7 +31,7 @@ struct CalculatorView: View {
                 .padding(.vertical, 12)
             }
             .scrollDismissesKeyboard(.interactively)
-            .safeAreaInset(edge: .bottom) { ResultCard(outcome: outcome, units: units, pricePerKg: calc.pricePerKg,
+            .safeAreaInset(edge: .bottom) { ResultCard(outcome: outcome, units: units, cost: { if case .ok(let r) = outcome { return calc.cost(r) } else { return nil } }(),
                                                        currency: settings.currency, qty: calc.quantity, linear: calc.shape.isLinear) }
             .onAppear { calc.proAllowed = pro.hasPro }
             .onReceive(pro.objectWillChange) { DispatchQueue.main.async { calc.proAllowed = pro.hasPro } }
@@ -214,9 +214,48 @@ struct CalculatorView: View {
         units == .metric ? Fmt.smart(d) + " kg/m³" : Fmt.fixed(d / 27679.9, 4) + " lb/in³"
     }
 
+    private var priceLabel: String {
+        switch calc.priceUnit {
+        case .kg: return L(units == .metric ? "price_per_kg" : "price_per_lb")
+        case .m: return L(units == .metric ? "price_per_m" : "price_per_ft")
+        case .pc: return L("price_per_piece")
+        }
+    }
+
+    /// Price per kg (free) · per metre · per piece (Pro). Sheets have no length, so no per metre there.
     private var priceRow: some View {
-        NumberField(label: L(units == .metric ? "price_per_kg" : "price_per_lb"), symbol: "$",
-                    unit: settings.currency, text: $calc.priceText, focus: $focus, focusKey: "price", id: "field_price")
+        VStack(alignment: .leading, spacing: 8) {
+            NumberField(label: priceLabel, symbol: "$",
+                        unit: settings.currency, text: $calc.priceText, focus: $focus, focusKey: "price", id: "field_price")
+            HStack(spacing: 8) {
+                ForEach(PriceUnit.allCases.filter { $0 != .m || calc.shape != .plate }, id: \.self) { u in
+                    Button {
+                        if u != .kg && !pro.hasPro { showPaywall = true } else { calc.changePriceUnit(u) }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(unitLabel(u))
+                            if u != .kg && !pro.purchased { ProBadge() }
+                        }
+                        .font(.subheadline)
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(calc.priceUnit == u ? Color.accentColor.opacity(0.18) : Color(.secondarySystemBackground),
+                                    in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(calc.priceUnit == u ? .isSelected : [])
+                    .accessibilityIdentifier("price_unit_" + u.rawValue)
+                }
+            }
+        }
+        .onChange(of: calc.shape) { s in if s == .plate && calc.priceUnit == .m { calc.changePriceUnit(.kg) } }
+    }
+
+    private func unitLabel(_ u: PriceUnit) -> String {
+        switch u {
+        case .kg: return L(units == .metric ? "price_unit_kg" : "price_unit_lb")
+        case .m: return L(units == .metric ? "price_unit_m" : "price_unit_ft")
+        case .pc: return L("price_unit_pc")
+        }
     }
 
     // MARK: reverse
@@ -274,7 +313,8 @@ struct CalculatorView: View {
             guard case .ok(let r) = outcome else { return }
             let item = ListItem(shape: calc.shape == .section ? (calc.family?.name ?? L(calc.shape.titleKey)) : L(calc.shape.titleKey),
                                 material: material.name, size: calc.sizeDescription(),
-                                qty: calc.quantity, pieceKg: r.pieceKg, pricePerKg: calc.pricePerKg)
+                                qty: calc.quantity, pieceKg: r.pieceKg, pricePerKg: calc.pricePerKg,
+                                priceUnit: calc.effectivePriceUnit, pieceM: calc.pieceLengthM)
             let name = lists.add(item)
             focus = nil
             withAnimation { toast = L("added_to", name) }
@@ -353,7 +393,7 @@ struct NumberField: View {
 struct ResultCard: View {
     let outcome: CalcOutcome
     let units: UnitSystem
-    let pricePerKg: Double?
+    let cost: Double?
     let currency: String
     let qty: Int
     let linear: Bool
@@ -390,8 +430,8 @@ struct ResultCard: View {
                             metric(L("weight_per_ft"), Fmt.smart(pm * 0.3048 / 0.45359237) + " lb/ft", "result_per_length")
                         }
                     }
-                    if let p = pricePerKg {
-                        metric(L("cost"), Fmt.money(p * r.totalKg, currency), "result_cost")
+                    if let c = cost {
+                        metric(L("cost"), Fmt.money(c, currency), "result_cost")
                     }
                     Spacer(minLength: 0)
                 }

@@ -101,3 +101,34 @@ final class ListsCsvTests: XCTestCase {
         XCTAssertGreaterThan(data.count, 2000)
     }
 }
+
+final class QuotePriceTests: XCTestCase {
+    let bar = ListItem(shape: "Round bar", material: "Steel", size: "Ø20 × 6 m", qty: 4, pieceKg: 14.8,
+                       pricePerKg: 3, priceUnit: .m, pieceM: 6)
+
+    func testCostPerMetrePieceKg() {
+        XCTAssertEqual(bar.cost!, 3 * 6 * 4, accuracy: 1e-9)
+        var pc = bar; pc.pricePerKg = 10; pc.priceUnit = .pc
+        XCTAssertEqual(pc.cost!, 40, accuracy: 1e-9)
+        var noLen = bar; noLen.pieceM = nil
+        XCTAssertNil(noLen.cost)
+    }
+
+    func testVat() {
+        var l = CutList(name: "Q", wastePct: 10, markupPct: 20, items: [bar]); l.vatPct = 20
+        XCTAssertEqual(l.totalWithVat, 72 * 1.1 * 1.2 * 1.2, accuracy: 1e-9)
+    }
+
+    func testOldListsStillDecode() throws {
+        let old = #"[{"id":"9B8F0C7E-2E33-4C6E-9F2A-6F7C1E2D3A4B","name":"Old","created":700000000,"wastePct":5,"markupPct":0,"items":[{"id":"1B8F0C7E-2E33-4C6E-9F2A-6F7C1E2D3A4B","shape":"Plate","material":"Steel","size":"10","qty":1,"pieceKg":157,"pricePerKg":2}]}]"#
+        let l = try JSONDecoder().decode([CutList].self, from: Data(old.utf8))
+        XCTAssertEqual(l[0].client, ""); XCTAssertEqual(l[0].items[0].priceUnit, .kg)
+        XCTAssertEqual(l[0].items[0].cost!, 314, accuracy: 1e-9)
+    }
+
+    func testQuoteRoundTrip() throws {
+        var l = CutList(name: "Оферта", items: [bar]); l.client = "Иванов"; l.quoteNo = "17"; l.vatPct = 20; l.validDays = 14; l.notes = "x"
+        let back = try JSONDecoder().decode(CutList.self, from: JSONEncoder().encode(l))
+        XCTAssertEqual(back, l)
+    }
+}

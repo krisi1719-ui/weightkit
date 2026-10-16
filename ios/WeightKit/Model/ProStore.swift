@@ -41,7 +41,7 @@ enum Keychain {
     #endif
 }
 
-/// One-time "Pro" purchase (non-consumable) + 14-day free trial + 24 h Pro from a rewarded ad.
+/// One-time "Pro" purchase (non-consumable) + 7-day free trial + 24 h Pro from a rewarded ad.
 ///
 /// Trial (App Review guideline 3.1.1): the user starts it by "buying" the free non-consumable
 /// `com.weightkit.app.trial14` (reference name "14-day Trial"). Its Apple-signed purchase date is the
@@ -156,7 +156,7 @@ final class ProStore: ObservableObject {
         ent.adoptTrialStart(d)
     }
 
-    /// Starts the 14-day trial through the App Store (free non-consumable).
+    /// Starts the 7-day trial through the App Store (free non-consumable).
     func startTrial() async {
         errorMessage = nil
         if trialProduct == nil { await load() }

@@ -16,23 +16,23 @@ final class EntitlementTests: XCTestCase {
         return e
     }
 
-    func testTrialDay0Day13_9ActiveDay14Ended() {
+    func testTrialDay0Day6_9ActiveDay7Ended() {
         let e = ent()
         XCTAssertTrue(e.inTrial); XCTAssertTrue(e.hasPro)
-        clock.advance(13.9 * day)
+        clock.advance(6.9 * day)
         XCTAssertTrue(e.inTrial)
         clock.advance(0.1 * day - 0.001)
         XCTAssertTrue(e.inTrial, "1 ms before the end")
         clock.advance(0.001)
         XCTAssertFalse(e.inTrial); XCTAssertFalse(e.hasPro)
-        XCTAssertEqual(e.trialEnd.timeIntervalSince(e.trialStart), 14 * day) // fixed 14 × 24 h, also across DST
+        XCTAssertEqual(e.trialEnd.timeIntervalSince(e.trialStart), 7 * day) // fixed 7 × 24 h, also across DST
     }
 
     func testClockBack30DaysDoesNotExtendTrial() {
         let e = ent()
-        clock.advance(13.9 * day); e.touchClock()
+        clock.advance(6.9 * day); e.touchClock()
         clock.wall -= 30 * day
-        XCTAssertTrue(e.inTrial, "still day 13.9")
+        XCTAssertTrue(e.inTrial, "still day 6.9")
         clock.mono += 0.1 * day; clock.wall += 0.1 * day
         XCTAssertFalse(e.inTrial)
         XCTAssertFalse(Entitlement(store: store, clock: clock).inTrial, "after restart")
@@ -40,7 +40,7 @@ final class EntitlementTests: XCTestCase {
 
     func testClockBackWithoutTouchAfterRelaunch() {
         let e = ent()
-        clock.advance(13 * day); e.touchClock()
+        clock.advance(6 * day); e.touchClock()
         clock.wall -= 30 * day; clock.mono += 2 * day
         XCTAssertFalse(Entitlement(store: store, clock: clock).inTrial)
     }
@@ -50,7 +50,7 @@ final class EntitlementTests: XCTestCase {
         e.touchClock()
         XCTAssertFalse(e.trialStarted); XCTAssertFalse(e.inTrial); XCTAssertFalse(e.hasPro)
         clock.advance(3 * day)
-        e.adoptTrialStart(clock.wall)                         // "14-day Trial" bought today
+        e.adoptTrialStart(clock.wall)                         // trial bought today
         XCTAssertTrue(e.inTrial)
         clock.advance(14 * day)
         XCTAssertFalse(e.inTrial)

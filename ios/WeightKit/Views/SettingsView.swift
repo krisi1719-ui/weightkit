@@ -1,7 +1,10 @@
 import SwiftUI
+import PhotosUI
 import UserMessagingPlatform
 
 struct SettingsView: View {
+    @State private var logoItem: PhotosPickerItem?
+    @State private var logoError = false
     @EnvironmentObject var settings: AppSettings
     @EnvironmentObject var pro: ProStore
     @State private var showPaywall = false
@@ -53,6 +56,7 @@ struct SettingsView: View {
                     TextField(L("company_contact"), text: $settings.companyContact, axis: .vertical)
                         .lineLimit(1...2)
                         .accessibilityIdentifier("company_contact")
+                    logoRow
                 }
                 Section(L("theme")) {
                     Picker(L("theme"), selection: $settings.theme) {
@@ -118,5 +122,40 @@ struct SettingsView: View {
                 Button(L("cancel"), role: .cancel) {}
             }
         }
+    }
+}
+
+extension SettingsView {
+    /// Logo for the PDF (Pro): the system photo picker, no photo-library permission needed.
+    @ViewBuilder var logoRow: some View {
+        HStack {
+            Text(L("logo"))
+            Spacer()
+            if let png = settings.logoPNG, let img = UIImage(data: png) {
+                Image(uiImage: img).resizable().scaledToFit().frame(width: 72, height: 40)
+                    .accessibilityIdentifier("logo_preview")
+                Button(role: .destructive) { _ = settings.setLogo(nil) } label: { Image(systemName: "trash") }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel(L("logo_remove"))
+                    .accessibilityIdentifier("logo_remove")
+            } else if pro.hasPro {
+                PhotosPicker(selection: $logoItem, matching: .images) { Text(L("logo_pick")) }
+                    .buttonStyle(.borderless)
+                    .accessibilityIdentifier("logo_pick")
+            } else {
+                Button { showPaywall = true } label: { HStack(spacing: 6) { Text(L("logo_pick")); ProBadge() } }
+                    .buttonStyle(.borderless)
+                    .accessibilityIdentifier("logo_pick")
+            }
+        }
+        .onChange(of: logoItem) { item in
+            guard let item else { return }
+            Task { @MainActor in
+                let data = try? await item.loadTransferable(type: Data.self)
+                if data == nil || !settings.setLogo(data) { logoError = true }
+                logoItem = nil
+            }
+        }
+        .alert(L("logo_bad"), isPresented: $logoError) { Button("OK", role: .cancel) {} }
     }
 }

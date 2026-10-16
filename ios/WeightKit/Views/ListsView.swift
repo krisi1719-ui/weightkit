@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ListsView: View {
     @EnvironmentObject var lists: ListStore
@@ -7,9 +8,13 @@ struct ListsView: View {
     @State private var showNew = false
     @State private var newName = ""
     @State private var showPaywall = false
+    @State private var path: [UUID] = []
+    @State private var share: ShareItem?
+    @State private var importing = false
+    @State private var message: String?
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if lists.lists.isEmpty {
                     VStack(spacing: 12) {
@@ -37,8 +42,20 @@ struct ListsView: View {
             }
             .safeAreaInset(edge: .bottom) { BannerSlot() }
             .navigationTitle(L("tab_lists"))
-            .navigationDestination(for: UUID.self) { id in ListDetailView(listID: id) }
+            .navigationDestination(for: UUID.self) { id in ListDetailView(listID: id) { path.append($0) } }
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        Button { backup() } label: { Label(L("backup_export") + (pro.purchased ? "" : "  ★ Pro"), systemImage: "square.and.arrow.up") }
+                            .disabled(lists.lists.isEmpty)
+                            .accessibilityIdentifier("backup_export")
+                        Button { if pro.hasPro { importing = true } else { showPaywall = true } } label: {
+                            Label(L("backup_import") + (pro.purchased ? "" : "  ★ Pro"), systemImage: "square.and.arrow.down")
+                        }
+                        .accessibilityIdentifier("backup_import")
+                    } label: { Label(L("more"), systemImage: "ellipsis.circle") }
+                    .accessibilityIdentifier("lists_menu")
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         // Free: one list. More lists = Pro.
@@ -53,7 +70,26 @@ struct ListsView: View {
                 Button(L("cancel"), role: .cancel) {}
             }
             .sheet(isPresented: $showPaywall) { PaywallView() }
+            .sheet(item: $share) { s in ShareSheet(items: [s.url]) }
+            .fileImporter(isPresented: $importing, allowedContentTypes: [.json, .plainText, .data]) { result in
+                guard case .success(let url) = result else { return }
+                let ok = url.startAccessingSecurityScopedResource()
+                defer { if ok { url.stopAccessingSecurityScopedResource() } }
+                if let data = try? Data(contentsOf: url), let n = Backup.restore(data, lists: lists, settings: settings) {
+                    message = L("backup_done", String(n))
+                } else {
+                    message = L("backup_bad")
+                }
+            }
+            .alert(message ?? "", isPresented: Binding(get: { message != nil }, set: { if !$0 { message = nil } })) {
+                Button("OK", role: .cancel) {}
+            }
         }
+    }
+
+    private func backup() {
+        guard pro.hasPro else { showPaywall = true; return }
+        share = ShareItem(url: Backup.file(lists: lists, settings: settings))
     }
 }
 
@@ -62,6 +98,7 @@ struct ListDetailView: View {
     @EnvironmentObject var pro: ProStore
     @EnvironmentObject var settings: AppSettings
     let listID: UUID
+    var onOpen: (UUID) -> Void = { _ in }
     @State private var share: ShareItem?
     @FocusState private var focused: Bool
     @State private var showPaywall = false
@@ -106,9 +143,15 @@ struct ListDetailView: View {
                     total(L("total_weight"), Fmt.weight(list.grossKg, settings.units), id: "total_weight")
                     if list.hasCost {
                         total(L("subtotal"), Fmt.money(list.netCost, settings.currency), id: "subtotal")
-                        total(L("total"), Fmt.money(list.totalCost, settings.currency), id: "total_cost")
+                        let vatOn = list.vatPct > 0 && pro.hasPro
+                        total(L(vatOn ? "total_ex_vat" : "total"), Fmt.money(list.totalCost, settings.currency), id: "total_cost")
+                        if vatOn {
+                            total(L("vat") + " " + Fmt.edit(list.vatPct) + " %", Fmt.money(list.vat, settings.currency), id: "total_vat")
+                            total(L("total_with_vat"), Fmt.money(list.totalWithVat, settings.currency), id: "total_with_vat")
+                        }
                     }
                 }
+                quoteSection(i)
                 Section {
                     Button { export(pdf: true, list) } label: { exportLabel(L("export_pdf"), "doc.richtext") }
                         .accessibilityIdentifier("export_pdf")
@@ -121,6 +164,15 @@ struct ListDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             .scrollDismissesKeyboard(.interactively)
             .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button {
+                            if pro.hasPro { if let id = lists.duplicate(listID) { onOpen(id) } } else { showPaywall = true }
+                        } label: { Label(L("duplicate") + (pro.purchased ? "" : "  ★ Pro"), systemImage: "plus.square.on.square") }
+                        .accessibilityIdentifier("list_duplicate")
+                    } label: { Label(L("more"), systemImage: "ellipsis.circle") }
+                    .accessibilityIdentifier("list_menu")
+                }
                 // decimal pads have no return key: same "Done" as on the calculator
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -131,6 +183,42 @@ struct ListDetailView: View {
             .sheet(isPresented: $showPaywall) { PaywallView() }
         } else {
             EmptyView()
+        }
+    }
+
+    /// Client, quote number, VAT, validity and notes for the PDF quote (Pro). Without Pro: one row that opens the paywall.
+    @ViewBuilder private func quoteSection(_ i: Int) -> some View {
+        Section {
+            if pro.hasPro {
+                TextField(L("client"), text: $lists.lists[i].client)
+                    .autocorrectionDisabled()
+                    .accessibilityIdentifier("quote_client")
+                TextField(L("quote_no"), text: $lists.lists[i].quoteNo)
+                    .autocorrectionDisabled()
+                    .accessibilityIdentifier("quote_no")
+                pctRow(L("vat_pct"), value: $lists.lists[i].vatPct, id: "quote_vat")
+                HStack {
+                    Text(L("valid_days"))
+                    Spacer()
+                    TextField("0", value: $lists.lists[i].validDays, format: .number)
+                        .keyboardType(.numberPad)
+                        .focused($focused)
+                        .multilineTextAlignment(.trailing)
+                        .frame(width: 80)
+                        .accessibilityLabel(L("valid_days"))
+                        .accessibilityIdentifier("quote_valid")
+                }
+                TextField(L("notes"), text: $lists.lists[i].notes, axis: .vertical)
+                    .lineLimit(2...6)
+                    .accessibilityIdentifier("quote_notes")
+            } else {
+                Button { showPaywall = true } label: {
+                    HStack { Text(L("quote")); Spacer(); ProBadge() }.frame(minHeight: 44)
+                }
+                .accessibilityIdentifier("quote_locked")
+            }
+        } header: {
+            if pro.hasPro { Text(L("quote")) }
         }
     }
 

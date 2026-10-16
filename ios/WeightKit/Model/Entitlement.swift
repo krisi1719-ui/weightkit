@@ -39,7 +39,7 @@ final class DeviceStore: KeyValueStore {
 
 /// Pro state without any StoreKit code, so it can be unit-tested with a fake clock.
 ///
-///  • Trial (iPhone): 14 × 24 h from the moment the user started it. The trial is started through the
+///  • Trial (iPhone): 7 × 24 h from the moment the user started it. The trial is started through the
 ///    App Store with the free non-consumable `com.weightkit.app.trial14` (App Review guideline 3.1.1),
 ///    so its start date comes from an Apple-signed transaction and survives reinstalls and new devices.
 ///    Before the trial is started the user is on the free tier.
@@ -49,7 +49,7 @@ final class DeviceStore: KeyValueStore {
 ///    behind, time keeps advancing with the monotonic clock, so moving the date back does not
 ///    freeze (= extend) the trial or the reward.
 final class Entitlement {
-    static let trialDays = 14
+    static let trialDays = 7
     static let rewardHours = 24
     static let trialSeconds = TimeInterval(trialDays * 24 * 3600)
     static let rewardSeconds = TimeInterval(rewardHours * 3600)

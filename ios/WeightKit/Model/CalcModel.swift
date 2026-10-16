@@ -28,8 +28,10 @@ final class CalcModel: ObservableObject {
     @Published var fields: [String: String] = [:]
     @Published var lengthText = "6"
     @Published var qtyText = "1"
-    /// Price per kg (metric) or per lb (imperial), as typed.
+    /// Price per kg/lb, per m/ft or per piece (see `priceUnit`), as typed.
     @Published var priceText = ""
+    /// What `priceText` refers to. Per metre / per piece need Pro (see `proAllowed`).
+    @Published var priceUnit: PriceUnit = .kg
     @Published var targetText = ""
     @Published var familyID: String = "ipe"
     @Published var itemIndex: Int = 0
@@ -57,11 +59,13 @@ final class CalcModel: ObservableObject {
         var units: UnitSystem, shape: ShapeKind, material: String, fields: [String: String]
         var length: String, qty: String, price: String, target: String
         var family: String, item: Int, rebar: Int
+        var priceUnit: PriceUnit? = nil
     }
 
     var snapshot: Snapshot {
         Snapshot(units: units, shape: shape, material: materialID, fields: fields, length: lengthText, qty: qtyText,
-                 price: priceText, target: targetText, family: familyID, item: itemIndex, rebar: rebarIndex)
+                 price: priceText, target: targetText, family: familyID, item: itemIndex, rebar: rebarIndex,
+                 priceUnit: priceUnit)
     }
 
     /// Restores a snapshot; ignored if it was taken in another unit system.
@@ -70,6 +74,7 @@ final class CalcModel: ObservableObject {
         shape = s.shape; materialID = s.material; fields = s.fields
         lengthText = s.length; qtyText = s.qty; priceText = s.price; targetText = s.target
         familyID = s.family; itemIndex = s.item; rebarIndex = s.rebar
+        priceUnit = s.priceUnit ?? .kg
     }
 
     static let snapshotKey = "calc"
@@ -106,8 +111,13 @@ final class CalcModel: ObservableObject {
             if let t = convert("f:" + k, v, old.mmPerDim, new.mmPerDim) { fields[k] = t }
         }
         if let t = convert("length", lengthText, old.mPerLength, new.mPerLength) { lengthText = t }
-        // price per kg <-> price per lb
-        if let t = convert("price", priceText, 1 / old.kgPerWeight, 1 / new.kgPerWeight) { priceText = t }
+        switch priceUnit {
+        case .kg: // price per kg <-> price per lb
+            if let t = convert("price", priceText, 1 / old.kgPerWeight, 1 / new.kgPerWeight) { priceText = t }
+        case .m:  // price per m <-> price per ft
+            if let t = convert("price_m", priceText, 1 / old.mPerLength, 1 / new.mPerLength) { priceText = t }
+        case .pc: break
+        }
         if let t = convert("target", targetText, old.kgPerWeight, new.kgPerWeight) { targetText = t }
         units = new
     }
@@ -135,10 +145,41 @@ final class CalcModel: ObservableObject {
     /// 1 … maxQty; empty / invalid input counts as 1. (Int(Double) would trap on huge input.)
     var quantity: Int { Int(min(max(Fmt.parse(qtyText) ?? 1, 1), Double(Self.maxQty))) }
 
-    /// Price per kg (internal), nil if not entered.
+    /// Price unit in effect: per metre / per piece fall back to per kg without Pro.
+    var effectivePriceUnit: PriceUnit { proAllowed || priceUnit == .kg ? priceUnit : .kg }
+
+    /// Internal price (per kg, per metre or per piece – see `effectivePriceUnit`), nil if not entered.
     var pricePerKg: Double? {
-        guard let p = base("price", priceText, 1 / units.kgPerWeight), p > 0 else { return nil }
+        let p: Double?
+        switch effectivePriceUnit {
+        case .kg: p = base("price", priceText, 1 / units.kgPerWeight)
+        case .m: p = base("price_m", priceText, 1 / units.mPerLength)
+        case .pc: p = Fmt.parse(priceText)
+        }
+        guard let p, p > 0 else { return nil }
         return p
+    }
+
+    /// Length of one piece in metres; nil for sheets (they have no length).
+    var pieceLengthM: Double? {
+        guard shape != .plate, let l = lengthM, l > 0 else { return nil }
+        return l
+    }
+
+    /// Cost of the calculated quantity in the chosen price unit; nil without a price.
+    func cost(_ r: CalcResult) -> Double? {
+        guard let p = pricePerKg else { return nil }
+        switch effectivePriceUnit {
+        case .kg: return p * r.totalKg
+        case .m: return pieceLengthM.map { p * $0 * Double(quantity) }
+        case .pc: return p * Double(quantity)
+        }
+    }
+
+    func changePriceUnit(_ u: PriceUnit) {
+        guard u != priceUnit else { return }
+        priceUnit = u
+        exact["price"] = nil; exact["price_m"] = nil
     }
 
     /// Target weight in kg, nil if not entered.

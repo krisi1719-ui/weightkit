@@ -1,3 +1,4 @@
+import UIKit
 import SwiftUI
 
 struct CustomMaterial: Codable, Identifiable, Hashable {
@@ -59,6 +60,31 @@ final class AppSettings: ObservableObject {
         if locale.region?.identifier == "BG" || locale.currency?.identifier == "BGN" { return "€" }
         if locale.region == nil && locale.language.languageCode?.identifier == "bg" { return "€" }
         return locale.currencySymbol ?? "€"
+    }
+
+    // MARK: logo for the PDF (Pro)
+
+    nonisolated static var logoURL: URL {
+        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir.appendingPathComponent("logo.png")
+    }
+
+    @Published private(set) var logoPNG: Data? = try? Data(contentsOf: AppSettings.logoURL)
+
+    /// Saves a picked image as the PDF logo (scaled to at most 600 px). false = not an image.
+    func setLogo(_ data: Data?) -> Bool {
+        guard let data else {
+            try? FileManager.default.removeItem(at: Self.logoURL); logoPNG = nil; return true
+        }
+        guard let img = UIImage(data: data) else { return false }
+        let scale = min(1, 600 / max(img.size.width, img.size.height))
+        let size = CGSize(width: max(1, img.size.width * scale), height: max(1, img.size.height * scale))
+        let fmt = UIGraphicsImageRendererFormat(); fmt.scale = 1
+        let png = UIGraphicsImageRenderer(size: size, format: fmt).pngData { _ in img.draw(in: CGRect(origin: .zero, size: size)) }
+        try? png.write(to: Self.logoURL, options: .atomic)
+        logoPNG = png
+        return true
     }
 
     /// All materials: built-in + user-defined.

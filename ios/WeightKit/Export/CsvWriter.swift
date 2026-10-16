@@ -3,6 +3,7 @@ import Foundation
 /// Localized column / row titles for the CSV.
 struct CsvLabels {
     let item, shape, material, size, qty, weightPiece, totalWeight, cost, waste, markup, total: String
+    var vat = "VAT", totalWithVat = "Total incl. VAT"
 }
 
 /// CSV text: UTF-8 BOM (so Excel shows Cyrillic etc.), CRLF, every text quoted ("" escapes "),
@@ -28,6 +29,10 @@ enum CsvWriter {
         rows.append(q(l.markup) + "," + n(list.markupPct, 1))
         rows.append(q(l.totalWeight + " (\(u.weightUnit))") + "," + n(list.grossKg / u.kgPerWeight))
         if list.hasCost { rows.append(q(l.total + " (\(currency))") + "," + n(list.totalCost, 2)) }
+        if list.hasCost && list.vatPct > 0 {
+            rows.append(q(l.vat + " %") + "," + n(list.vatPct, 1))
+            rows.append(q(l.totalWithVat + " (\(currency))") + "," + n(list.totalWithVat, 2))
+        }
         return bom + rows.joined(separator: "\r\n") + "\r\n"
     }
 }

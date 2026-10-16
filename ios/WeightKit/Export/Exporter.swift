@@ -14,7 +14,8 @@ enum Exporter {
     static func csv(_ list: CutList, settings: AppSettings) -> URL {
         let labels = CsvLabels(item: L("item"), shape: L("shape"), material: L("material"), size: L("size"),
                                qty: L("qty"), weightPiece: L("weight_piece"), totalWeight: L("total_weight"),
-                               cost: L("cost"), waste: L("waste"), markup: L("markup"), total: L("total"))
+                               cost: L("cost"), waste: L("waste"), markup: L("markup"), total: L("total"),
+                               vat: L("vat"), totalWithVat: L("total_with_vat"))
         let url = fileURL(list.name, ext: "csv")
         try? Data(CsvWriter.text(list, units: settings.units, currency: settings.currency, labels: labels).utf8)
             .write(to: url, options: .atomic)
@@ -79,11 +80,26 @@ enum Exporter {
             newPage()
             // title block
             let top = y
-            accent.setFill()
-            UIBezierPath(rect: CGRect(x: margin, y: top, width: 6, height: 44)).fill()
-            _ = draw(L("pdf_title"), title, x: margin + 14, width: 300)
+            // logo (Pro) at the top left instead of the accent bar
+            var tx = margin + 14
+            if let png = settings.logoPNG, let logo = UIImage(data: png), logo.size.height > 0 {
+                let w = min(140, logo.size.width * 48 / logo.size.height)
+                let h = logo.size.height * w / logo.size.width
+                logo.draw(in: CGRect(x: margin, y: top, width: w, height: h))
+                tx = margin + w + 12
+            } else {
+                accent.setFill()
+                UIBezierPath(rect: CGRect(x: margin, y: top, width: 6, height: 44)).fill()
+            }
+            let heading = list.isQuote
+                ? L("quote_title") + (list.quoteNo.isEmpty ? "" : " № " + list.quoteNo.trimmingCharacters(in: .whitespaces))
+                : L("pdf_title")
+            _ = draw(heading, title, x: tx, width: 300)
             y = top + 26
-            _ = draw(list.name, body, x: margin + 14, width: 300, color: .darkGray)
+            y += draw(list.name, body, x: tx, width: 300, color: .darkGray)
+            let client = list.client.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !client.isEmpty { y += draw(L("client") + ": " + client, bold, x: tx, width: 300) }
+            let leftEnd = y
             // right column: company name, address, contact, then the date
             let rx = page.width - margin - 220
             y = top
@@ -94,8 +110,13 @@ enum Exporter {
                 if !t.isEmpty { y += draw(t, body, x: rx, width: 220, color: .darkGray, align: .right) }
             }
             y = max(y + 2, top + 26)
-            y += draw(L("date") + ": " + Fmt.date(Date()), body, x: rx, width: 220, color: .darkGray, align: .right)
-            y = max(y, top + 44) + 16
+            let today = Date()
+            y += draw(L("date") + ": " + Fmt.date(today), body, x: rx, width: 220, color: .darkGray, align: .right)
+            if list.validDays > 0 {
+                let until = today.addingTimeInterval(TimeInterval(list.validDays) * 86400)
+                y += draw(L("valid_until") + ": " + Fmt.date(until), body, x: rx, width: 220, color: .darkGray, align: .right)
+            }
+            y = max(y, top + 44, leftEnd) + 16
             header()
 
             for (i, it) in list.items.enumerated() {
@@ -132,7 +153,21 @@ enum Exporter {
             if list.hasCost {
                 totalRow(L("subtotal"), Fmt.money(list.netCost, settings.currency), body)
                 totalRow(L("markup"), Fmt.fixed(list.markupPct, 1) + " %", body)
-                totalRow(L("total"), Fmt.money(list.totalCost, settings.currency), UIFont.systemFont(ofSize: 12, weight: .bold))
+                if list.vatPct > 0 {
+                    totalRow(L("total_ex_vat"), Fmt.money(list.totalCost, settings.currency), bold)
+                    totalRow(L("vat") + " " + Fmt.fixed(list.vatPct, 1) + " %", Fmt.money(list.vat, settings.currency), body)
+                    totalRow(L("total_with_vat"), Fmt.money(list.totalWithVat, settings.currency), UIFont.systemFont(ofSize: 12, weight: .bold))
+                } else {
+                    totalRow(L("total"), Fmt.money(list.totalCost, settings.currency), UIFont.systemFont(ofSize: 12, weight: .bold))
+                }
+            }
+            let notes = list.notes.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !notes.isEmpty {
+                y += 14
+                if y > page.height - margin - 80 { newPage() }
+                _ = draw(L("notes"), bold, x: margin, width: page.width - 2 * margin)
+                y += 14
+                y += draw(notes, body, x: margin, width: page.width - 2 * margin)
             }
             y = page.height - margin - 12
             _ = draw("WeightKit · " + L("data_note"), small, x: margin, width: page.width - 2 * margin, color: .gray)
